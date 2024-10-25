@@ -22,4 +22,13 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://sheets.googleapis.com/v4/spreadsheets", // Base URL for Google Sheets API
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });
