@@ -111,12 +111,34 @@ const foodTypeOptions = [
   { label: "Cena", value: "dinner" },
 ];
 
+const getSuggestedDay = () => {
+  const currentDay = new Date().getDay();
+
+  switch (currentDay) {
+    case 0:
+      return "sunday";
+    case 1:
+      return "monday";
+
+    case 5:
+      return "friday";
+
+    case 6:
+      return "saturday";
+    case 2:
+    case 3:
+    case 4:
+    default:
+      return "none";
+  }
+};
+
 const FeedingLog = () => {
   const notifications = useNotifications();
 
   const [campists, setCampists] = useState([]);
   const [feedingValues, setFeedingValues] = useState({
-    foodDay: "none",
+    foodDay: getSuggestedDay(),
     foodType: "none",
   });
   const [selectedCampist, setSelectedCampist] = useState(DEFAULT_CAMPIST);
