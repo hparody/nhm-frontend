@@ -34,6 +34,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/drive-api/, ""),
       },
+      "/app-scripts-api": {
+        target: "https://script.google.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/app-scripts-api/, ""),
+      },
     },
   },
 });

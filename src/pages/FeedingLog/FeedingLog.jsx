@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material";
@@ -24,6 +24,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 import { getCampData } from "@/services/sheetsApi";
+import { createFeedingRecord } from "@/services/appScriptsApi";
 import { parseCampistsData } from "@/utils/sheets";
 
 import AvivadosBgImage from "@/assets/avivados-bg-fullcolor.jpg";
@@ -114,7 +115,25 @@ const FeedingLog = () => {
   const [searchCampist, setSearchCampist] = useState("");
 
   const filteredFoodDayOptions = foodDayOptions;
-  const filteredFoodTypeOptions = foodTypeOptions;
+  const filteredFoodTypeOptions = useMemo(() => {
+    switch (feedingValues.foodDay) {
+      case "friday":
+        return foodTypeOptions.filter(
+          (opt) => opt.value !== "breakfast" && opt.value !== "lunch"
+        );
+
+      case "saturday":
+      case "sunday":
+        return foodTypeOptions;
+
+      case "monday":
+        return foodTypeOptions.filter((opt) => opt.value !== "dinner");
+
+      case "none":
+      default:
+        return foodTypeOptions.filter((opt) => opt.value == "none");
+    }
+  }, [feedingValues.foodDay]);
 
   const handleFeedingValuesChange = (event) => {
     const fieldName = event.target.name;
@@ -136,9 +155,27 @@ const FeedingLog = () => {
     }
   };
 
-  const onSubmitFeedingLog = (event) => {
-    event.preventDefault();
-  };
+  const onSubmitFeedingLog = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      const feedingRecord = {
+        datetime: new Date().toLocaleString(),
+        id: selectedCampist.id,
+        name: selectedCampist.fullName,
+        day: feedingValues.foodDay,
+        foodType: feedingValues.foodType,
+      };
+
+      const res = await createFeedingRecord(feedingRecord);
+      if (!res.error) {
+        console.log(res.data);
+      } else {
+        console.error("Error creating feeding record:", res.errorMessage);
+      }
+    },
+    [selectedCampist, feedingValues]
+  );
 
   useEffect(() => {
     fetchCampData();
@@ -330,7 +367,14 @@ const FeedingLog = () => {
                 }}
               >
                 <Chip
-                  sx={{ padding: "0px 8px" }}
+                  sx={{
+                    padding: "0px 8px",
+                    fontWeight: "bold",
+                    backgroundColor:
+                      selectedCampist.campistType == "ESTADÍA"
+                        ? "secondary.main"
+                        : "coral",
+                  }}
                   icon={getIconByCampistType(selectedCampist.campistType)}
                   label={selectedCampist.campistType}
                   size="small"
