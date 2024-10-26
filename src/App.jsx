@@ -3,6 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import CustomGlobalStyles from "@/components/CustomGlobalStyles";
 import ThemeProvider from "@/providers/ThemeProvider";
 
+import PageLayout from "@/components/PageLayout";
 import Router from "./router/Router";
 
 const App = () => {
@@ -10,7 +11,9 @@ const App = () => {
     <ThemeProvider>
       <CssBaseline enableColorScheme />
       <CustomGlobalStyles />
-      <Router />
+      <PageLayout>
+        <Router />
+      </PageLayout>
     </ThemeProvider>
   );
 };

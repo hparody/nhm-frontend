@@ -29,6 +29,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
+      "/drive-api": {
+        target: "https://drive.usercontent.google.com/download",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/drive-api/, ""),
+      },
     },
   },
 });

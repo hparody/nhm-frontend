@@ -11,10 +11,10 @@ let theme = createTheme(
   {
     palette: {
       primary: {
-        main: "#0D0D0D",
+        main: "#133366",
       },
       secondary: {
-        main: "#BFBFBF",
+        main: "#57BEE6",
       },
       mode: "light",
     },
@@ -54,7 +54,7 @@ theme = createTheme(theme, {
     }),
     gray: theme.palette.augmentColor({
       color: {
-        main: "##f5f5f5",
+        main: "#f5f5f5",
       },
       name: "gray",
     }),

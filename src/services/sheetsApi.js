@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_GOOGLE_SHEETS_BASE_URL;
 const CAMP_SPREADSHEET_ID = "1uVGQNtnemts97pOrj91GDGDqGI83bMyu1Zh1zsvA6Go";
-const CAMP_DB_RANGE = "CampDB!A:K";
+const CAMP_DB_RANGE = "CampDB!A:W";
 
 const api = axios.create({
   baseURL: BASE_URL, // Base URL de la API

@@ -1,40 +1,29 @@
+import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 
-import { Outlet, useLocation } from "react-router-dom";
-
-import NavBar from "./NavBar";
-
-const PageLayout = () => {
-  const location = useLocation();
-
+const PageLayout = ({ children }) => {
   return (
     <Box
-      component="div"
+      component="main"
       sx={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         width: "100vw",
         height: "100vh",
         overflowX: "hidden",
         boxSizing: "border-box",
+        justifyContent: "center",
+        backgroundColor: "rgb(87 190 230 / 15%)",
+        padding: "12px",
       }}
     >
-      {location.pathname === "/" && <NavBar />}
-      <Box
-        component="div"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          height: "100%",
-          padding: "20px",
-          boxSizing: "border-box",
-        }}
-      >
-        <Outlet />
-      </Box>
+      {children}
     </Box>
   );
+};
+
+PageLayout.propTypes = {
+  children: PropTypes.node,
 };
 
 export default PageLayout;
