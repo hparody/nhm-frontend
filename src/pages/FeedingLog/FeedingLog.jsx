@@ -1,5 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 
+import { useNotifications } from "@toolpad/core";
+
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -12,6 +14,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import Alert from "@mui/material/Alert";
+
+import LoadingButton from "@mui/lab/LoadingButton";
 
 /** Select */
 import MenuItem from "@mui/material/MenuItem";
@@ -26,6 +30,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import { getCampData } from "@/services/sheetsApi";
 import { createFeedingRecord } from "@/services/appScriptsApi";
 import { parseCampistsData } from "@/utils/sheets";
+import { getOptionLabel } from "@/utils/array";
 
 import AvivadosBgImage from "@/assets/avivados-bg-fullcolor.jpg";
 import DefaultManPhoto from "@/assets/man-icon.png";
@@ -98,6 +103,7 @@ const foodDayOptions = [
   { label: "Domingo", value: "sunday" },
   { label: "Lunes", value: "monday" },
 ];
+
 const foodTypeOptions = [
   { label: <em>Selecciona una comida</em>, value: "none" },
   { label: "Desayuno", value: "breakfast" },
@@ -106,6 +112,8 @@ const foodTypeOptions = [
 ];
 
 const FeedingLog = () => {
+  const notifications = useNotifications();
+
   const [campists, setCampists] = useState([]);
   const [feedingValues, setFeedingValues] = useState({
     foodDay: "none",
@@ -113,6 +121,7 @@ const FeedingLog = () => {
   });
   const [selectedCampist, setSelectedCampist] = useState(DEFAULT_CAMPIST);
   const [searchCampist, setSearchCampist] = useState("");
+  const [savingRecord, setSavingRecord] = useState(false);
 
   const filteredFoodDayOptions = foodDayOptions;
   const filteredFoodTypeOptions = useMemo(() => {
@@ -158,6 +167,7 @@ const FeedingLog = () => {
   const onSubmitFeedingLog = useCallback(
     async (event) => {
       event.preventDefault();
+      setSavingRecord(true);
 
       const feedingRecord = {
         datetime: new Date().toLocaleString(),
@@ -169,12 +179,25 @@ const FeedingLog = () => {
 
       const res = await createFeedingRecord(feedingRecord);
       if (!res.error) {
-        console.log(res.data);
+        const successMessage = `Alimentación (${getOptionLabel(feedingValues.foodDay, foodDayOptions)} - ${getOptionLabel(feedingValues.foodType, foodTypeOptions)}) para ${selectedCampist.fullName} registrada exitosamente.`;
+        notifications.show(successMessage, {
+          key: "feeding-log",
+          severity: "success",
+          autoHideDuration: 3000,
+        });
+        setSelectedCampist(DEFAULT_CAMPIST);
       } else {
         console.error("Error creating feeding record:", res.errorMessage);
+        const errorMessage = `Error: ${res.errorMessage}`;
+        notifications.show(errorMessage, {
+          key: "feeding-log",
+          severity: "error",
+          autoHideDuration: 3000,
+        });
       }
+      setSavingRecord(false);
     },
-    [selectedCampist, feedingValues]
+    [selectedCampist, feedingValues, notifications]
   );
 
   useEffect(() => {
@@ -401,15 +424,17 @@ const FeedingLog = () => {
             </Box>
           )}
         </Box>
-        <Button
+        <LoadingButton
           type="submit"
           variant="contained"
           color="primary"
           startIcon={<HowToRegIcon />}
           disabled={selectedCampist.id === ""}
+          loading={savingRecord}
+          loadingPosition="center"
         >
           REGISTRAR ALIMENTACIÓN
-        </Button>
+        </LoadingButton>
       </Box>
     </Box>
   );

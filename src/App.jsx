@@ -1,5 +1,5 @@
 import CssBaseline from "@mui/material/CssBaseline";
-
+import { NotificationsProvider } from "@toolpad/core/useNotifications";
 import CustomGlobalStyles from "@/components/CustomGlobalStyles";
 import ThemeProvider from "@/providers/ThemeProvider";
 
@@ -9,11 +9,13 @@ import Router from "./router/Router";
 const App = () => {
   return (
     <ThemeProvider>
-      <CssBaseline enableColorScheme />
-      <CustomGlobalStyles />
-      <PageLayout>
-        <Router />
-      </PageLayout>
+      <NotificationsProvider>
+        <CssBaseline enableColorScheme />
+        <CustomGlobalStyles />
+        <PageLayout>
+          <Router />
+        </PageLayout>
+      </NotificationsProvider>
     </ThemeProvider>
   );
 };
