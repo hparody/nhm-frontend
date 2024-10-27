@@ -11,7 +11,7 @@ const keysMapping = {
   allergies: "allergies",
   age: "age",
   full_name: "fullName",
-  photo: "photo",
+  photo_id: "photo",
 };
 
 const parseCampistsData = (rawData) => {
@@ -21,7 +21,7 @@ const parseCampistsData = (rawData) => {
     .map((row) => {
       const campist = keys.reduce((campistObj, key, idx) => {
         const value =
-          key === "photo" ? parsePhotoUrl(row[idx] ?? "") : row[idx];
+          key === "photo_id" ? parsePhotoUrl(row[idx] ?? "") : row[idx];
         campistObj[keysMapping[key]] = value ?? "";
         return campistObj;
       }, {});
@@ -32,14 +32,11 @@ const parseCampistsData = (rawData) => {
   return parsedData;
 };
 
-const parsePhotoUrl = (rawUrl) => {
-  if (import.meta.env.MODE === "development" && rawUrl !== "") {
-    return rawUrl.replace(
-      "https://drive.usercontent.google.com/download",
-      "/drive-api"
-    );
+const parsePhotoUrl = (photoId) => {
+  if (import.meta.env.MODE === "development" && photoId !== "") {
+    return `${import.meta.env.VITE_GOOGLE_DRIVE_URL}/v3/files/${photoId}?alt=media&key=${import.meta.env.VITE_GOOGLE_DRIVE_API_KEY}`;
   }
-  return rawUrl;
+  return photoId;
 };
 
 export { parseCampistsData };

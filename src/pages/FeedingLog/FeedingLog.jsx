@@ -67,30 +67,20 @@ const getIconByCampistType = (campistType) =>
 
 const customAutocompleteOption = (props, option) => {
   const { key, ...optionProps } = props;
-  let campistPhoto = option.photo;
-  if (campistPhoto === "") {
-    campistPhoto = getDefaultIconByGender(option.gender);
-  } else {
-    campistPhoto += "&w=300";
-  }
   return (
-    <Box
-      key={key}
-      component="li"
-      sx={{
-        "& > img": {
+    <Box key={key} component="li" {...optionProps}>
+      <Avatar
+        alt={option.fullName}
+        variant="rounded"
+        sx={{
           mr: 2,
           flexShrink: 0,
           aspectRatio: 1,
-          objectFit: "cover",
-          borderRadius: "50%",
-          border: "2px solid #ccc",
-          objectPosition: "50% 25%",
-        },
-      }}
-      {...optionProps}
-    >
-      <img loading="lazy" width="20" src={campistPhoto} alt={option.fullName} />
+          width: "36px",
+          height: "36px",
+          fontSize: "1.2rem",
+        }}
+      >{`${option.fullName.split(" ")[0][0]}${option.fullName.split(" ")[1][0]}`}</Avatar>
       {option.fullName}
     </Box>
   );
@@ -138,6 +128,7 @@ const FeedingLog = () => {
 
   const [campists, setCampists] = useState([]);
   const [feedingValues, setFeedingValues] = useState({
+    registeredBy: undefined,
     foodDay: getSuggestedDay(),
     foodType: "none",
   });
@@ -179,12 +170,18 @@ const FeedingLog = () => {
     setSelectedCampist(newValue ?? DEFAULT_CAMPIST);
   };
 
-  const fetchCampData = async () => {
+  const fetchCampData = useCallback(async () => {
     const res = await getCampData();
     if (!res.error) {
       setCampists(parseCampistsData(res.data.values));
+    } else {
+      notifications.show("Error al cargar los campistas.", {
+        key: "feeding-log",
+        severity: "error",
+        autoHideDuration: 5000,
+      });
     }
-  };
+  }, [notifications]);
 
   const onSubmitFeedingLog = useCallback(
     async (event) => {
@@ -224,7 +221,7 @@ const FeedingLog = () => {
 
   useEffect(() => {
     fetchCampData();
-  }, []);
+  }, [fetchCampData]);
 
   return (
     <Box
@@ -236,7 +233,7 @@ const FeedingLog = () => {
         backgroundColor: "#ffffff",
         borderRadius: "8px",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-        overflow: "hidden auto",
+        overflow: "hidden",
         boxSizing: "border-box",
       }}
     >
@@ -267,7 +264,7 @@ const FeedingLog = () => {
             Registro de Alimentación
           </Typography>
           <Typography variant="body2" fontStyle="italic">
-            A través de este formulario podrás registrar la información de
+            A través de este formulario podrás realizar el registro de
             alimentación de cada campista.
           </Typography>
         </Box>
@@ -281,6 +278,20 @@ const FeedingLog = () => {
             gap: "12px",
           }}
         >
+          <FormControl fullWidth required>
+            <FormLabel id="id_registered_by">
+              Nombre de quien registra
+            </FormLabel>
+            <TextField
+              required
+              fullWidth
+              name="registeredBy"
+              placeholder="Luis Álvarez"
+              aria-labelledby="id_registered_by"
+              value={feedingValues.registeredBy}
+              onChange={handleFeedingValuesChange}
+            ></TextField>
+          </FormControl>
           <FormControl fullWidth required>
             <FormLabel id="id_food_day_label">Día de alimentación</FormLabel>
             <Select
@@ -417,8 +428,8 @@ const FeedingLog = () => {
                     fontWeight: "bold",
                     backgroundColor:
                       selectedCampist.campistType == "ESTADÍA"
-                        ? "secondary.main"
-                        : "coral",
+                        ? "secondary.light"
+                        : "gold",
                   }}
                   icon={getIconByCampistType(selectedCampist.campistType)}
                   label={selectedCampist.campistType}

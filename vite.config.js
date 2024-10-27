@@ -25,17 +25,17 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://sheets.googleapis.com/v4/spreadsheets", // Base URL for Google Sheets API
+        target: "https://sheets.googleapis.com/v4/spreadsheets", // Base URL for Google Sheets API to get the campists
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/drive-api": {
-        target: "https://drive.usercontent.google.com/download",
+        target: "https://www.googleapis.com/drive", // Base URL for Google Drive API to retrieve campist images
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/drive-api/, ""),
       },
       "/app-scripts-api": {
-        target: "https://script.google.com",
+        target: "https://script.google.com", // Base URL for Google Script API to send records to the sheets
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/app-scripts-api/, ""),
       },
