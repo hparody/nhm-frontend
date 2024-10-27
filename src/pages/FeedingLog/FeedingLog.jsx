@@ -165,6 +165,28 @@ const FeedingLog = () => {
     }
   }, [feedingValues.foodDay]);
 
+  const updateFieldError = (fieldName, fieldValue) => {
+    let errorObj = {};
+    switch (fieldName) {
+      case "registeredBy":
+        errorObj[fieldName] = !fieldValue || fieldValue.trim().length === 0;
+        break;
+
+      case "foodDay":
+      case "foodType":
+        errorObj[fieldName] = fieldValue === "none";
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      ...errorObj,
+    }));
+  };
+
   const handleFeedingValuesChange = (event) => {
     const fieldName = event.target.name;
     const fieldValue = event.target.value;
@@ -172,6 +194,7 @@ const FeedingLog = () => {
       ...prevValues,
       [fieldName]: fieldValue,
     }));
+    updateFieldError(fieldName, fieldValue);
   };
 
   const onCampistChange = (_, newValue) => {
