@@ -210,13 +210,14 @@ const FeedingLog = () => {
   }, [selectedCampist, feedingValues]);
 
   const saveFeedingRecord = useCallback(
-    async ({ campistId, campistName, day, foodType }) => {
+    async ({ campistId, campistName, day, foodType, registeredBy }) => {
       const feedingRecord = {
         datetime: new Date().toLocaleString(),
         id: campistId,
         name: campistName,
         day,
         foodType,
+        registeredBy,
       };
 
       const res = await createFeedingRecord(feedingRecord);
@@ -247,11 +248,12 @@ const FeedingLog = () => {
       setSavingRecord(true);
 
       if (isFormValid()) {
-        saveFeedingRecord({
+        await saveFeedingRecord({
           campistId: selectedCampist.id,
           campistName: selectedCampist.fullName,
           day: feedingValues.foodDay,
           foodType: feedingValues.foodType,
+          registeredBy: feedingValues.registeredBy,
         });
       } else {
         notifications.show("Todos los campos son obligatorios.", {

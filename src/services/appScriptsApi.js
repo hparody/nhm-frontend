@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_GOOGLE_APP_SCRIPTS_URL;
 const IMPLEMENTATION_ID =
-  "AKfycbxZ7XJD9IS2eB0JOcAD9J6vNQeZKK7JpRt3q_nWutwACZfSjdNt6kXcetws_lxg_0qB_Q";
+  "AKfycbzXT-ovB_1LUB3XaUBfm-1kSjQzD1DqX9DBY3kh1tPwawj7f5Wjun08JL99SBfpuE2DCQ";
 
 const api = axios.create({
   baseURL: BASE_URL, // Base URL de la API
@@ -12,7 +12,7 @@ const api = axios.create({
 });
 
 const createFeedingRecord = async (record) => {
-  const { datetime, id, name, day, foodType } = record;
+  const { datetime, id, name, day, foodType, registeredBy } = record;
   const response = { error: false, errorMessage: {}, data: [] };
   try {
     const url = `/macros/s/${IMPLEMENTATION_ID}/exec`;
@@ -23,6 +23,7 @@ const createFeedingRecord = async (record) => {
         name,
         day,
         foodType,
+        registeredBy,
       },
       maxBodyLength: Infinity,
     });
