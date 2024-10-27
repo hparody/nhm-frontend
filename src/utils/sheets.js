@@ -33,7 +33,7 @@ const parseCampistsData = (rawData) => {
 };
 
 const parsePhotoUrl = (photoId) => {
-  if (import.meta.env.MODE === "development" && photoId !== "") {
+  if (photoId !== "") {
     return `${import.meta.env.VITE_GOOGLE_DRIVE_URL}/v3/files/${photoId}?alt=media&key=${import.meta.env.VITE_GOOGLE_DRIVE_API_KEY}`;
   }
   return photoId;
