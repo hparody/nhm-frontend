@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNotifications } from "@toolpad/core";
 
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material";
+import { FormHelperText, styled } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
@@ -57,6 +57,13 @@ const DEFAULT_CAMPIST = {
   age: "",
   fullName: "",
   photo: "",
+};
+
+const DEFAULT_ERRORS = {
+  registeredBy: false,
+  foodDay: false,
+  foodType: false,
+  campist: false,
 };
 
 const getDefaultIconByGender = (gender) =>
@@ -128,10 +135,11 @@ const FeedingLog = () => {
 
   const [campists, setCampists] = useState([]);
   const [feedingValues, setFeedingValues] = useState({
-    registeredBy: undefined,
+    registeredBy: "",
     foodDay: getSuggestedDay(),
     foodType: "none",
   });
+  const [errors, setErrors] = useState(DEFAULT_ERRORS);
   const [selectedCampist, setSelectedCampist] = useState(DEFAULT_CAMPIST);
   const [searchCampist, setSearchCampist] = useState("");
   const [savingRecord, setSavingRecord] = useState(false);
@@ -176,29 +184,44 @@ const FeedingLog = () => {
       setCampists(parseCampistsData(res.data.values));
     } else {
       notifications.show("Error al cargar los campistas.", {
-        key: "feeding-log",
+        key: "campists",
         severity: "error",
         autoHideDuration: 5000,
       });
     }
   }, [notifications]);
 
-  const onSubmitFeedingLog = useCallback(
-    async (event) => {
-      event.preventDefault();
-      setSavingRecord(true);
+  const isFormValid = useCallback(() => {
+    return (
+      selectedCampist.id &&
+      feedingValues.foodDay !== "none" &&
+      feedingValues.foodType !== "none" &&
+      feedingValues.registeredBy !== ""
+    );
+  }, [selectedCampist, feedingValues]);
 
+  const updateFormErrors = useCallback(() => {
+    setErrors({
+      registeredBy: feedingValues.registeredBy === "",
+      foodDay: feedingValues.foodDay === "none",
+      foodType: feedingValues.foodType === "none",
+      campist: !selectedCampist.id,
+    });
+  }, [selectedCampist, feedingValues]);
+
+  const saveFeedingRecord = useCallback(
+    async ({ campistId, campistName, day, foodType }) => {
       const feedingRecord = {
         datetime: new Date().toLocaleString(),
-        id: selectedCampist.id,
-        name: selectedCampist.fullName,
-        day: feedingValues.foodDay,
-        foodType: feedingValues.foodType,
+        id: campistId,
+        name: campistName,
+        day,
+        foodType,
       };
 
       const res = await createFeedingRecord(feedingRecord);
       if (!res.error) {
-        const successMessage = `Alimentación (${getOptionLabel(feedingValues.foodDay, foodDayOptions)} - ${getOptionLabel(feedingValues.foodType, foodTypeOptions)}) para ${selectedCampist.fullName} registrada exitosamente.`;
+        const successMessage = `Alimentación (${getOptionLabel(day, foodDayOptions)} - ${getOptionLabel(foodType, foodTypeOptions)}) para ${campistName} registrada exitosamente.`;
         notifications.show(successMessage, {
           key: "feeding-log",
           severity: "success",
@@ -214,9 +237,41 @@ const FeedingLog = () => {
           autoHideDuration: 3000,
         });
       }
+    },
+    [notifications]
+  );
+
+  const onSubmitFeedingLog = useCallback(
+    async (event) => {
+      event.preventDefault();
+      setSavingRecord(true);
+
+      if (isFormValid()) {
+        saveFeedingRecord({
+          campistId: selectedCampist.id,
+          campistName: selectedCampist.fullName,
+          day: feedingValues.foodDay,
+          foodType: feedingValues.foodType,
+        });
+      } else {
+        notifications.show("Todos los campos son obligatorios.", {
+          key: "form-errors",
+          severity: "error",
+          autoHideDuration: 3000,
+        });
+      }
+      updateFormErrors();
       setSavingRecord(false);
     },
-    [selectedCampist, feedingValues, notifications]
+    [
+      setSavingRecord,
+      isFormValid,
+      saveFeedingRecord,
+      selectedCampist,
+      feedingValues,
+      notifications,
+      updateFormErrors,
+    ]
   );
 
   useEffect(() => {
@@ -290,9 +345,13 @@ const FeedingLog = () => {
               aria-labelledby="id_registered_by"
               value={feedingValues.registeredBy}
               onChange={handleFeedingValuesChange}
+              error={errors.registeredBy}
             ></TextField>
+            {errors.registeredBy && (
+              <FormHelperText error>Este campo es obligatorio.</FormHelperText>
+            )}
           </FormControl>
-          <FormControl fullWidth required>
+          <FormControl fullWidth required error={errors.foodDay}>
             <FormLabel id="id_food_day_label">Día de alimentación</FormLabel>
             <Select
               labelId="id_food_day_label"
@@ -303,6 +362,7 @@ const FeedingLog = () => {
               placeholder="Viernes"
               defaultValue="none"
               onChange={handleFeedingValuesChange}
+              error={errors.foodDay}
             >
               {filteredFoodDayOptions.map((option) => (
                 <MenuItem
@@ -314,8 +374,13 @@ const FeedingLog = () => {
                 </MenuItem>
               ))}
             </Select>
+            {errors.foodDay && (
+              <FormHelperText error>
+                Por favor, selecciona una opción.
+              </FormHelperText>
+            )}
           </FormControl>
-          <FormControl fullWidth required>
+          <FormControl fullWidth required error={errors.foodType}>
             <FormLabel id="id_food_type_label">Tipo de comida</FormLabel>
             <Select
               labelId="id_food_type_label"
@@ -325,6 +390,7 @@ const FeedingLog = () => {
               placeholder="Desayuno"
               defaultValue="none"
               onChange={handleFeedingValuesChange}
+              error={errors.foodType}
             >
               {filteredFoodTypeOptions.map((option) => (
                 <MenuItem
@@ -336,6 +402,11 @@ const FeedingLog = () => {
                 </MenuItem>
               ))}
             </Select>
+            {errors.foodType && (
+              <FormHelperText error>
+                Por favor, selecciona una opción.
+              </FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Divider sx={{ margin: "8px 0px" }} />
@@ -458,13 +529,13 @@ const FeedingLog = () => {
           )}
         </Box>
         <LoadingButton
-          type="submit"
           variant="contained"
           color="primary"
           startIcon={<HowToRegIcon />}
           disabled={selectedCampist.id === ""}
           loading={savingRecord}
           loadingPosition="center"
+          onClick={onSubmitFeedingLog}
         >
           REGISTRAR ALIMENTACIÓN
         </LoadingButton>
