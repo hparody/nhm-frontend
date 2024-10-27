@@ -310,6 +310,7 @@ const FeedingLog = () => {
         display: "flex",
         flexDirection: "column",
         width: "600px",
+        height: "fit-content",
         backgroundColor: "#ffffff",
         borderRadius: "8px",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",

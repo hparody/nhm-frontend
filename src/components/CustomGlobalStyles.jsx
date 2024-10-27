@@ -7,7 +7,7 @@ const CustomGlobalStyles = () => (
       body: {
         height: "100vh",
         width: "100vw",
-        overflow: "auto",
+        overflow: "hidden auto",
         backgroundColor: "#f1f1f1",
       },
       ".MuiFormLabel-asterisk": { color: "red" },
