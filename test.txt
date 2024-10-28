@@ -1,0 +1,115 @@
+import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from "react";
+
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material";
+
+// Qr Scanner
+import QrReader from "qr-scanner";
+import QrFrame from "../assets/qr-frame.svg";
+
+const Image = styled("img")``;
+
+const QrScanner = ({ onScanSuccess, onScanFail }) => {
+  const qrReader = useRef(null);
+  const videoEl = useRef(null);
+  const qrBoxEl = useRef(null);
+
+  const [qrOn, setQrOn] = useState(true);
+
+  useEffect(() => {
+    const tempVideoEl = videoEl?.current;
+    if (tempVideoEl && !qrReader.current) {
+      // 👉 Instantiate the QR Scanner
+      qrReader.current = new QrReader(videoEl?.current, onScanSuccess, {
+        onDecodeError: onScanFail,
+        // 📷 This is the camera facing mode. In mobile devices, "environment" means back camera and "user" means front camera.
+        preferredCamera: "environment",
+        // 🖼 This will help us position our "QrFrame.svg" so that user can only scan when qr code is put in between our QrFrame.svg.
+        highlightScanRegion: true,
+        // 🔥 This will produce a yellow (default color) outline around the qr code that we scan, showing a proof that our qr-scanner is scanning that qr code.
+        highlightCodeOutline: true,
+        // 📦 A custom div which will pair with "highlightScanRegion" option above 👆. This gives us full control over our scan region.
+        overlay: qrBoxEl?.current || undefined,
+      });
+
+      // 🚀 Start QR Scanner
+      qrReader?.current
+        ?.start()
+        .then(() => setQrOn(true))
+        .catch((err) => {
+          if (err) setQrOn(false);
+        });
+    }
+
+    // 🧹 Clean up on unmount.
+    // 🚨 This removes the QR Scanner from rendering and using camera when it is closed or removed from the UI.
+    return () => {
+      if (!tempVideoEl) {
+        qrReader?.current?.stop();
+      }
+    };
+  }, [onScanFail, onScanSuccess]);
+
+  // ❌ If "camera" is not allowed in browser permissions, show an alert.
+  useEffect(() => {
+    if (!qrOn)
+      alert(
+        "Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload."
+      );
+  }, [qrOn]);
+
+  return (
+    <Box
+      component="section"
+      sx={(theme) => ({
+        width: "430px",
+        height: "100vh",
+        margin: "0 auto",
+        position: "relative",
+        [theme.breakpoints.down("sm")]: {
+          width: "100%",
+        },
+      })}
+    >
+      <Box
+        component="video"
+        ref={videoEl}
+        controls
+        sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+      >
+        <track kind="captions" srcLang="es" />
+      </Box>
+      <Box
+        component="div"
+        ref={qrBoxEl}
+        sx={{
+          width: "100% !important",
+          left: "0 !important",
+        }}
+      >
+        <Image
+          src={QrFrame}
+          alt="Qr Frame"
+          width={256}
+          height={256}
+          className="qr-frame"
+          sx={{
+            position: "absolute",
+            fill: "none",
+            left: "50%",
+            top: "50%",
+            transform: "translateX(-50%) translateY(-50%)",
+          }}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+QrScanner.propTypes = {
+  onScanFail: PropTypes.func.isRequired,
+  onScanSuccess: PropTypes.func.isRequired,
+};
+
+export default QrScanner;

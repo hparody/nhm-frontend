@@ -32,6 +32,8 @@ import { createFeedingRecord } from "@/services/appScriptsApi";
 import { parseCampistsData } from "@/utils/sheets";
 import { getOptionLabel } from "@/utils/array";
 
+import QrScanner from "@/components/QrScanner";
+
 import AvivadosBgImage from "@/assets/avivados-bg-fullcolor.jpg";
 import DefaultManPhoto from "@/assets/man-icon.png";
 import DefaultWomanPhoto from "@/assets/woman-icon.png";
@@ -472,7 +474,6 @@ const FeedingLog = () => {
               fullWidth
               autoComplete
               autoHighlight
-              disablePortal
               clearOnEscape
               options={campists}
               getOptionKey={(option) => option.id}
@@ -565,6 +566,13 @@ const FeedingLog = () => {
         >
           REGISTRAR ALIMENTACIÓN
         </LoadingButton>
+        <QrScanner />
+        {/**
+         * <QrScanner
+          onScanSuccess={(res) => console.log("QR Scan Success:", res)}
+          onScanFail={(err) => console.log("QR Scan Error:", err)}
+        />
+         */}
       </Box>
     </Box>
   );
