@@ -6,8 +6,6 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import Box from "@mui/material/Box";
 
-const SCREEN_RATIO = 0.5625;
-
 // Square QR box with edge size = 70% of the smaller edge of the viewfinder.
 const qrBoxFunction = (viewfinderWidth, viewfinderHeight) => {
   const minEdgePercentage = 0.8; // 70%
@@ -37,7 +35,6 @@ const QRScanner = () => {
           {
             fps: 10,
             qrbox: qrBoxFunction,
-            aspectRatio: SCREEN_RATIO,
           },
           (decodedText) => {
             setScanResult(decodedText);
@@ -99,6 +96,7 @@ const QRScanner = () => {
         }}
       >
         <IconButton
+          size="large"
           edge="end"
           onClick={stopScanner}
           aria-label="close"
