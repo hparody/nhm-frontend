@@ -37,6 +37,9 @@ let theme = createTheme(
   coreesES // mui translations
 );
 
+// Make theme responsive for different screen sizes
+theme = responsiveFontSizes(theme);
+
 theme = createTheme(theme, {
   // Custom colors created with augmentColor go here
   palette: {
@@ -60,8 +63,6 @@ theme = createTheme(theme, {
     }),
   },
 });
-
-theme = responsiveFontSizes(theme);
 
 const ThemeProvider = ({ children }) => (
   <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
