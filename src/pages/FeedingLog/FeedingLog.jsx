@@ -300,7 +300,36 @@ const FeedingLog = () => {
   );
 
   const onScanningCampist = (campistIdEncoded) => {
-    alert(campistIdEncoded);
+    console.log(campistIdEncoded);
+    try {
+      const campistIdDecoded = atob(campistIdEncoded).toString();
+      console.log(campistIdDecoded);
+      const campist = campists.find((c) => c.id === campistIdDecoded);
+      if (campist) {
+        setSelectedCampist(campist);
+        notifications.show(campist.fullName, {
+          key: "scanned-campist",
+          severity: "info",
+          autoHideDuration: 2000,
+        });
+      } else {
+        notifications.show(
+          "El código QR no corresponde a un campista registrado.",
+          {
+            key: "scanned-campist",
+            severity: "warning",
+            autoHideDuration: 3000,
+          }
+        );
+      }
+    } catch (e) {
+      console.error("Error decoding campist ID:", e);
+      notifications.show("El código QR no es válido.", {
+        key: "scanned-campist",
+        severity: "error",
+        autoHideDuration: 3000,
+      });
+    }
   };
 
   useEffect(() => {
