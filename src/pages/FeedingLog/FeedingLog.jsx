@@ -299,6 +299,10 @@ const FeedingLog = () => {
     ]
   );
 
+  const onScanningCampist = (campistIdEncoded) => {
+    alert(campistIdEncoded);
+  };
+
   useEffect(() => {
     fetchCampData();
   }, [fetchCampData]);
@@ -456,7 +460,7 @@ const FeedingLog = () => {
               color: "secondary",
               sx: { fontWeight: "bold" },
             }}
-            onScanSuccess={(decodedValue) => console.log(decodedValue)}
+            onScanSuccess={onScanningCampist}
           >
             Escanear QR
           </QrScanButton>

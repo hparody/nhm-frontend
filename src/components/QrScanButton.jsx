@@ -54,8 +54,8 @@ const QrScanButton = ({
 
   const handleScanSuccess = useCallback(
     (decodedValue) => {
-      onScanSuccess(decodedValue);
       stopScanner();
+      onScanSuccess(decodedValue);
     },
     [onScanSuccess, stopScanner]
   );
