@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
@@ -21,7 +20,6 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
-import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -32,7 +30,7 @@ import { createFeedingRecord } from "@/services/appScriptsApi";
 import { parseCampistsData } from "@/utils/sheets";
 import { getOptionLabel } from "@/utils/array";
 
-import QrScanner from "@/components/QrScanner";
+import QrScanButton from "@/components/QrScanButton";
 
 import AvivadosBgImage from "@/assets/avivados-bg-fullcolor.jpg";
 import DefaultManPhoto from "@/assets/man-icon.png";
@@ -301,6 +299,39 @@ const FeedingLog = () => {
     ]
   );
 
+  const onScanningCampist = (campistIdEncoded) => {
+    console.log(campistIdEncoded);
+    try {
+      const campistIdDecoded = atob(campistIdEncoded).toString();
+      console.log(campistIdDecoded);
+      const campist = campists.find((c) => c.id === campistIdDecoded);
+      if (campist) {
+        setSelectedCampist(campist);
+        notifications.show(campist.fullName, {
+          key: "scanned-campist",
+          severity: "info",
+          autoHideDuration: 2000,
+        });
+      } else {
+        notifications.show(
+          "El código QR no corresponde a un campista registrado.",
+          {
+            key: "scanned-campist",
+            severity: "warning",
+            autoHideDuration: 3000,
+          }
+        );
+      }
+    } catch (e) {
+      console.error("Error decoding campist ID:", e);
+      notifications.show("El código QR no es válido.", {
+        key: "scanned-campist",
+        severity: "error",
+        autoHideDuration: 3000,
+      });
+    }
+  };
+
   useEffect(() => {
     fetchCampData();
   }, [fetchCampData]);
@@ -451,15 +482,17 @@ const FeedingLog = () => {
           <Typography variant="body2" fontStyle="italic" sx={{ width: "100%" }}>
             Busca por el nombre del campista o escanea su código QR.
           </Typography>
-          <Button
-            type="button"
-            variant="contained"
-            color="secondary"
-            startIcon={<QrCodeScannerIcon />}
-            sx={{ fontWeight: "bold" }}
+          <QrScanButton
+            buttonProps={{
+              type: "button",
+              variant: "contained",
+              color: "secondary",
+              sx: { fontWeight: "bold" },
+            }}
+            onScanSuccess={onScanningCampist}
           >
             Escanear QR
-          </Button>
+          </QrScanButton>
           <FormControl fullWidth required>
             <FormLabel id="id_campist_label">Campista</FormLabel>
             <Autocomplete
@@ -566,13 +599,6 @@ const FeedingLog = () => {
         >
           REGISTRAR ALIMENTACIÓN
         </LoadingButton>
-        <QrScanner />
-        {/**
-         * <QrScanner
-          onScanSuccess={(res) => console.log("QR Scan Success:", res)}
-          onScanFail={(err) => console.log("QR Scan Error:", err)}
-        />
-         */}
       </Box>
     </Box>
   );
