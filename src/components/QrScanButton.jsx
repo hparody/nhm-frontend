@@ -61,7 +61,6 @@ const QrScanButton = ({
   );
 
   const initializeScanner = useCallback(() => {
-    console.log(isScannerOpen);
     setLoadingScanner(true);
     setTimeout(() => {
       setLoadingScanner(false);
@@ -79,7 +78,7 @@ const QrScanButton = ({
         });
       scannerRef.current = qrCodeScanner;
     }, 500); // Delay to ensure 'reader' is in the DOM
-  }, [handleScanSuccess, onScanFail, isScannerOpen]);
+  }, [handleScanSuccess, onScanFail]);
 
   return (
     <>
