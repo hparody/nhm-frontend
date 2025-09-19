@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNotifications } from "@toolpad/core";
 
 import Box from "@mui/material/Box";
-import { FormHelperText, styled } from "@mui/material";
+import { Button, FormHelperText, styled } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
@@ -13,8 +13,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import Alert from "@mui/material/Alert";
-
-import LoadingButton from "@mui/lab/LoadingButton";
 
 /** Select */
 import MenuItem from "@mui/material/MenuItem";
@@ -588,7 +586,7 @@ const FeedingLog = () => {
             </Box>
           )}
         </Box>
-        <LoadingButton
+        <Button
           variant="contained"
           color="primary"
           startIcon={<HowToRegIcon />}
@@ -598,7 +596,7 @@ const FeedingLog = () => {
           onClick={onSubmitFeedingLog}
         >
           REGISTRAR ALIMENTACIÓN
-        </LoadingButton>
+        </Button>
       </Box>
     </Box>
   );
