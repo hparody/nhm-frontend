@@ -416,7 +416,6 @@ const FeedingLog = () => {
               id="id_food_day"
               name="foodDay"
               value={feedingValues.foodDay}
-              placeholder="Viernes"
               defaultValue="none"
               onChange={handleFeedingValuesChange}
               error={errors.foodDay}
@@ -444,7 +443,6 @@ const FeedingLog = () => {
               id="id_food_type"
               name="foodType"
               value={feedingValues.foodType}
-              placeholder="Desayuno"
               defaultValue="none"
               onChange={handleFeedingValuesChange}
               error={errors.foodType}
