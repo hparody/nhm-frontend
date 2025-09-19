@@ -11,16 +11,11 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
-import Alert from "@mui/material/Alert";
 
 /** Select */
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
-import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
-import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
-import PhoneIcon from "@mui/icons-material/Phone";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 import { getCampData } from "@/services/sheetsApi";
@@ -31,8 +26,8 @@ import { getOptionLabel } from "@/utils/array";
 import QrScanButton from "@/components/QrScanButton";
 
 import AvivadosBgImage from "@/assets/avivados-bg-fullcolor.jpg";
-import DefaultManPhoto from "@/assets/man-icon.png";
-import DefaultWomanPhoto from "@/assets/woman-icon.png";
+
+import CampistDetails from "./CampistDetails";
 
 const Image = styled("img")`
   object-fit: cover;
@@ -63,12 +58,6 @@ const DEFAULT_ERRORS = {
   foodType: false,
   campist: false,
 };
-
-const getDefaultIconByGender = (gender) =>
-  gender === "Masculino" ? DefaultManPhoto : DefaultWomanPhoto;
-
-const getIconByCampistType = (campistType) =>
-  campistType === "ESTADÍA" ? <HolidayVillageIcon /> : <DirectionsRunIcon />;
 
 const customAutocompleteOption = (props, option) => {
   const { key, ...optionProps } = props;
@@ -514,74 +503,7 @@ const FeedingLog = () => {
             />
           </FormControl>
           {selectedCampist?.id !== "" && (
-            <Box
-              component="div"
-              sx={{ display: "flex", flexDirection: "row", gap: "8px" }}
-            >
-              <Avatar
-                alt={selectedCampist.fullName || ""}
-                src={
-                  selectedCampist.photo ||
-                  getDefaultIconByGender(selectedCampist.gender)
-                }
-                variant="rounded"
-                sx={{
-                  width: "100px",
-                  height: "auto",
-                  marginRight: "8px",
-                }}
-                imgProps={{
-                  sx: {
-                    aspectRatio: 1,
-                    objectFit:
-                      selectedCampist.photo !== "" ? "cover" : "contain",
-                    objectPosition:
-                      selectedCampist.photo !== "" ? "50% 20%" : "50% 50%",
-                  },
-                  loading: "lazy",
-                }}
-              />
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: "4px",
-                }}
-              >
-                <Chip
-                  sx={{
-                    padding: "0px 8px",
-                    fontWeight: "bold",
-                    backgroundColor:
-                      selectedCampist.campistType == "ESTADÍA"
-                        ? "secondary.light"
-                        : "gold",
-                  }}
-                  icon={getIconByCampistType(selectedCampist.campistType)}
-                  label={selectedCampist.campistType}
-                  size="small"
-                />
-                <Chip
-                  sx={{ padding: "0px 8px" }}
-                  icon={<PhoneIcon />}
-                  label={selectedCampist.cellphone || "N/A"}
-                  size="small"
-                />
-                <Typography
-                  variant="h6"
-                  fontStyle="italic"
-                  color="primary.dark"
-                  sx={{ display: "flex", flexBasis: "100%", lineHeight: "1.4" }}
-                >
-                  {selectedCampist.fullName}
-                </Typography>
-                <Alert severity="info" sx={{ width: "100%" }}>
-                  <b>¿Alergias?</b>
-                  {` ${selectedCampist.allergies}`}
-                </Alert>
-              </Box>
-            </Box>
+            <CampistDetails campist={selectedCampist} />
           )}
         </Box>
         <Button
