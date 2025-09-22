@@ -346,56 +346,58 @@ const FeedingLog = () => {
         boxSizing: "border-box",
       }}
     >
-      <Image src={AvivadosBgImage} alt="Avivados Fondo" loading="lazy" />
-      <Box
-        component="form"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          height: "100%",
-          padding: "20px 24px",
-          gap: "12px",
-        }}
-        onSubmit={onSubmitFeedingLog}
-      >
+      {loadingCampists ? (
         <Box
-          component="article"
           sx={{
             display: "flex",
-            width: "100%",
             flexDirection: "column",
-            flexWrap: "wrap",
-            gap: "8px",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
+            minHeight: "300px",
           }}
         >
-          <Typography variant="h4" fontWeight="bold">
-            Registro de Alimentación
-          </Typography>
-          <Typography variant="body2" fontStyle="italic">
-            A través de este formulario podrás realizar el registro de
-            alimentación de cada campista.
+          <CircularProgress color="primary" />
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            Cargando campistas...
           </Typography>
         </Box>
-        {loadingCampists ? (
+      ) : (
+        <>
+          <Image src={AvivadosBgImage} alt="Avivados Fondo" loading="lazy" />
           <Box
+            component="form"
             sx={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
               width: "100%",
-              minHeight: "300px",
+              height: "100%",
+              padding: "20px 24px",
+              gap: "12px",
             }}
+            onSubmit={onSubmitFeedingLog}
           >
-            <CircularProgress color="primary" />
-            <Typography variant="body1" sx={{ mt: 2 }}>
-              Cargando campistas...
-            </Typography>
-          </Box>
-        ) : (
-          <>
+            {/* ...existing code... */}
+            <Box
+              component="article"
+              sx={{
+                display: "flex",
+                width: "100%",
+                flexDirection: "column",
+                flexWrap: "wrap",
+                gap: "8px",
+              }}
+            >
+              <Typography variant="h4" fontWeight="bold">
+                Registro de Alimentación
+              </Typography>
+              <Typography variant="body2" fontStyle="italic">
+                A través de este formulario podrás realizar el registro de
+                alimentación de cada campista.
+              </Typography>
+            </Box>
+            {/* ...existing code... */}
             <Box
               component="article"
               sx={{
@@ -552,9 +554,9 @@ const FeedingLog = () => {
             >
               REGISTRAR ALIMENTACIÓN
             </Button>
-          </>
-        )}
-      </Box>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
