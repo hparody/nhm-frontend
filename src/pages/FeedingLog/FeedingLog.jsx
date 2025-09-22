@@ -295,10 +295,8 @@ const FeedingLog = () => {
   );
 
   const onScanningCampist = (campistIdEncoded) => {
-    console.log(campistIdEncoded);
     try {
       const campistIdDecoded = atob(campistIdEncoded).toString();
-      console.log(campistIdDecoded);
       const campist = campists.find((c) => c.id === campistIdDecoded);
       if (campist) {
         setSelectedCampist(campist);

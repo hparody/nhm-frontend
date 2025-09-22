@@ -27,6 +27,11 @@ const QrScanButton = ({
     onCancel();
   };
 
+  const onScan = (answer) => {
+    setIsScannerOpen(false);
+    onScanSuccess(answer[0].rawValue);
+  };
+
   return (
     <>
       <Button
@@ -70,7 +75,7 @@ const QrScanButton = ({
           <CloseIcon />
         </IconButton>
         <Scanner
-          onScan={(answer) => alert(JSON.stringify(answer))}
+          onScan={(answer) => onScan(answer)}
           onError={onScanFail}
           components={{
             torch: true,
