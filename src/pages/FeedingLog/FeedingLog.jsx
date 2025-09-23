@@ -25,7 +25,6 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 import { getCampData } from "@/services/sheetsApi";
 import { createFeedingRecord } from "@/services/appScriptsApi";
-import { parseCampistsData } from "@/utils/sheets";
 import { getOptionLabel } from "@/utils/array";
 
 import QrScanButton from "@/components/QrScanButton";
@@ -42,6 +41,7 @@ const Image = styled("img")`
 `;
 
 const DEFAULT_CAMPIST = {
+  sysId: "",
   id: "",
   name: "",
   lastName: "",
@@ -198,7 +198,7 @@ const FeedingLog = () => {
     setLoadingCampists(true);
     const res = await getCampData();
     if (!res.error) {
-      setCampists(parseCampistsData(res.data.values));
+      setCampists(res.data);
     } else {
       notifications.show("Error al cargar los campistas.", {
         key: "campists",
@@ -211,7 +211,7 @@ const FeedingLog = () => {
 
   const isFormValid = useCallback(() => {
     return (
-      selectedCampist.id &&
+      selectedCampist.sysId &&
       feedingValues.foodDay !== "none" &&
       feedingValues.foodType !== "none" &&
       feedingValues.registeredBy !== ""
@@ -223,7 +223,7 @@ const FeedingLog = () => {
       registeredBy: feedingValues.registeredBy === "",
       foodDay: feedingValues.foodDay === "none",
       foodType: feedingValues.foodType === "none",
-      campist: !selectedCampist.id,
+      campist: !selectedCampist.sysId,
     });
   }, [selectedCampist, feedingValues]);
 
@@ -231,7 +231,7 @@ const FeedingLog = () => {
     async ({ campistId, campistName, day, foodType, registeredBy }) => {
       const feedingRecord = {
         datetime: new Date().toLocaleString(),
-        id: campistId,
+        sysId: campistId,
         name: campistName,
         day,
         foodType,
@@ -267,7 +267,7 @@ const FeedingLog = () => {
 
       if (isFormValid()) {
         await saveFeedingRecord({
-          campistId: selectedCampist.id,
+          campistId: selectedCampist.sysId,
           campistName: selectedCampist.fullName,
           day: feedingValues.foodDay,
           foodType: feedingValues.foodType,
@@ -294,10 +294,9 @@ const FeedingLog = () => {
     ]
   );
 
-  const onScanningCampist = (campistIdEncoded) => {
+  const onScanningCampist = (campistSysId) => {
     try {
-      const campistIdDecoded = atob(campistIdEncoded).toString();
-      const campist = campists.find((c) => c.id === campistIdDecoded);
+      const campist = campists.find((c) => c.sysId === campistSysId);
       if (campist) {
         setSelectedCampist(campist);
         notifications.show(campist.fullName, {
@@ -529,7 +528,7 @@ const FeedingLog = () => {
                   autoHighlight
                   clearOnEscape
                   options={campists}
-                  getOptionKey={(option) => option.id}
+                  getOptionKey={(option) => option.sysId}
                   getOptionLabel={(option) => option.fullName}
                   renderInput={(params) => (
                     <TextField fullWidth {...params} placeholder="Juan Gómez" />
@@ -537,7 +536,7 @@ const FeedingLog = () => {
                   renderOption={customAutocompleteOption}
                 />
               </FormControl>
-              {selectedCampist?.id !== "" && (
+              {selectedCampist?.sysId !== "" && (
                 <CampistDetails campist={selectedCampist} />
               )}
             </Box>
@@ -545,7 +544,7 @@ const FeedingLog = () => {
               variant="contained"
               color="primary"
               startIcon={<HowToRegIcon />}
-              disabled={selectedCampist.id === ""}
+              disabled={selectedCampist.sysId === ""}
               loading={savingRecord}
               loadingPosition="center"
               onClick={onSubmitFeedingLog}

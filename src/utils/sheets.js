@@ -1,4 +1,5 @@
 const keysMapping = {
+  sys_id: "sysId",
   id: "id",
   name: "name",
   last_name: "lastName",
