@@ -1,8 +1,10 @@
 import axios from "axios";
 
+import { parseCampistsData } from "@/utils/sheets";
+
 const BASE_URL = import.meta.env.VITE_GOOGLE_SHEETS_BASE_URL;
-const CAMP_SPREADSHEET_ID = "1uVGQNtnemts97pOrj91GDGDqGI83bMyu1Zh1zsvA6Go";
-const CAMP_DB_RANGE = "CampDB!A:W";
+const CAMP_SPREADSHEET_ID = "1kHxQkHvSVPqnlr29OYJMEDAK9ODQfC4IWcqODlUDhQ8";
+const CAMP_DB_RANGE = "CampDB!A:O";
 
 const api = axios.create({
   baseURL: BASE_URL, // Base URL de la API
@@ -23,7 +25,7 @@ const getCampData = async () => {
         majorDimension: "ROWS",
       },
     });
-    response.data = res.data;
+    response.data = parseCampistsData(res.data.values);
   } catch (error) {
     console.error("Error fetching data:", error);
     response.error = true;
