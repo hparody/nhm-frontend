@@ -36,7 +36,7 @@ const QrScanButton = ({
     <>
       <Button
         variant="contained"
-        color="primary"
+        color="info"
         size="large"
         startIcon={<QrCodeScannerIcon />}
         {...buttonProps}

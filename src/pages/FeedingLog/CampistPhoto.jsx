@@ -9,7 +9,7 @@ import DefaultWomanPhoto from "@/assets/woman-icon.png";
 const imagesBlobCache = new Map();
 
 const getDefaultIconByGender = (gender) =>
-  gender === "Masculino" ? DefaultManPhoto : DefaultWomanPhoto;
+  gender === "Hombre" ? DefaultManPhoto : DefaultWomanPhoto;
 
 const imageURLToBlob = async (imageURL) => {
   let url = "";

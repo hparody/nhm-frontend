@@ -13,7 +13,7 @@ const PageLayout = ({ children }) => {
         overflowX: "hidden",
         boxSizing: "border-box",
         justifyContent: "center",
-        backgroundColor: "rgb(87 190 230 / 15%)",
+        backgroundColor: "#f5f5f5c3",
         padding: "12px",
       }}
     >

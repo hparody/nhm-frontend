@@ -14,7 +14,7 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<Home />} errorElement={<NotFoundPage />} />
       <Route
-        path="/camp/avivados2024/feeding-log"
+        path="/camp/emunah-2025/feeding-log"
         element={<FeedingLog />}
         errorElement={<NotFoundPage />}
       />
