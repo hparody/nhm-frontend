@@ -330,15 +330,16 @@ const FeedingLog = () => {
             }}
           >
             <FormControl fullWidth required>
-              <FormLabel id="id_registered_by">
+              <FormLabel id="id_registered_by_label" htmlFor="id_registered_by">
                 Nombre de quien registra
               </FormLabel>
               <TextField
+                id="id_registered_by"
                 required
                 fullWidth
                 name="registeredBy"
                 placeholder="Luis Álvarez"
-                aria-labelledby="id_registered_by"
+                aria-labelledby="id_registered_by_label"
                 value={feedingValues.registeredBy}
                 onChange={handleFeedingValuesChange}
                 error={errors.registeredBy}
@@ -350,12 +351,17 @@ const FeedingLog = () => {
               )}
             </FormControl>
             <FormControl fullWidth required error={errors.foodDay}>
-              <FormLabel id="id_food_day_label">Día de alimentación</FormLabel>
+              <FormLabel id="id_food_day_label" htmlFor="id_food_day">
+                Día de alimentación
+              </FormLabel>
               <Select
                 labelId="id_food_day_label"
                 aria-labelledby="id_food_day_label"
-                id="id_food_day"
+                id="id_food_day_select"
                 name="foodDay"
+                inputProps={{
+                  id: "id_food_day",
+                }}
                 value={feedingValues.foodDay}
                 defaultValue="none"
                 onChange={handleFeedingValuesChange}
@@ -378,11 +384,16 @@ const FeedingLog = () => {
               )}
             </FormControl>
             <FormControl fullWidth required error={errors.foodType}>
-              <FormLabel id="id_food_type_label">Tipo de comida</FormLabel>
+              <FormLabel id="id_food_type_label" htmlFor="id_food_type">
+                Tipo de comida
+              </FormLabel>
               <Select
                 labelId="id_food_type_label"
-                id="id_food_type"
+                id="id_food_type_select"
                 name="foodType"
+                inputProps={{
+                  id: "id_food_type",
+                }}
                 value={feedingValues.foodType}
                 defaultValue="none"
                 onChange={handleFeedingValuesChange}
@@ -435,7 +446,9 @@ const FeedingLog = () => {
               Escanear QR
             </QrScanButton>
             <FormControl fullWidth required>
-              <FormLabel id="id_campist_label">Campista</FormLabel>
+              <FormLabel id="id_campist_label" htmlFor="id_campist">
+                Campista
+              </FormLabel>
               <Autocomplete
                 id="id_campist"
                 aria-labelledby="id_campist_label"
