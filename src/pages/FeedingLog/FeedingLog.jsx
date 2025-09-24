@@ -3,12 +3,7 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNotifications } from "@toolpad/core";
 
 import Box from "@mui/material/Box";
-import {
-  Button,
-  FormHelperText,
-  styled,
-  CircularProgress,
-} from "@mui/material";
+import { Button, FormHelperText } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
@@ -25,37 +20,25 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 import { getCampData } from "@/services/sheetsApi";
 import { createFeedingRecord } from "@/services/appScriptsApi";
+
 import { getOptionLabel } from "@/utils/array";
+import getSuggestedDay from "@/utils/getSuggestedDay";
+
+import { DEFAULT_CAMPIST } from "@/constants/campist";
+import {
+  foodDays,
+  foodTypes,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY,
+  MONDAY,
+} from "@/constants/feeding";
 
 import QrScanButton from "@/components/QrScanButton";
-
-import AvivadosBgImage from "@/assets/avivados-bg-fullcolor.jpg";
+import FormLayout from "@/components/FormLayout";
+import Loader from "@/components/Loader";
 
 import CampistDetails from "./CampistDetails";
-
-const Image = styled("img")`
-  object-fit: cover;
-  object-position: 50% 56%;
-  height: 180px;
-  border-radius: 4px;
-`;
-
-const DEFAULT_CAMPIST = {
-  sysId: "",
-  id: "",
-  name: "",
-  lastName: "",
-  idType: "",
-  campistType: "",
-  cellphone: "",
-  birthdate: "",
-  gender: "",
-  bloodType: "",
-  allergies: "",
-  age: "",
-  fullName: "",
-  photo: "",
-};
 
 const DEFAULT_ERRORS = {
   registeredBy: false,
@@ -87,40 +70,13 @@ const customAutocompleteOption = (props, option) => {
 
 const foodDayOptions = [
   { label: <em>Selecciona un día</em>, value: "none" },
-  { label: "Viernes", value: "friday" },
-  { label: "Sábado", value: "saturday" },
-  { label: "Domingo", value: "sunday" },
-  { label: "Lunes", value: "monday" },
+  ...foodDays,
 ];
 
 const foodTypeOptions = [
   { label: <em>Selecciona una comida</em>, value: "none" },
-  { label: "Desayuno", value: "breakfast" },
-  { label: "Almuerzo", value: "lunch" },
-  { label: "Cena", value: "dinner" },
+  ...foodTypes,
 ];
-
-const getSuggestedDay = () => {
-  const currentDay = new Date().getDay();
-
-  switch (currentDay) {
-    case 0:
-      return "sunday";
-    case 1:
-      return "monday";
-
-    case 5:
-      return "friday";
-
-    case 6:
-      return "saturday";
-    case 2:
-    case 3:
-    case 4:
-    default:
-      return "none";
-  }
-};
 
 const FeedingLog = () => {
   const notifications = useNotifications();
@@ -129,7 +85,7 @@ const FeedingLog = () => {
   const [loadingCampists, setLoadingCampists] = useState(true);
   const [feedingValues, setFeedingValues] = useState({
     registeredBy: "",
-    foodDay: getSuggestedDay(),
+    foodDay: getSuggestedDay("none"),
     foodType: "none",
   });
   const [errors, setErrors] = useState(DEFAULT_ERRORS);
@@ -140,16 +96,16 @@ const FeedingLog = () => {
   const filteredFoodDayOptions = foodDayOptions;
   const filteredFoodTypeOptions = useMemo(() => {
     switch (feedingValues.foodDay) {
-      case "friday":
+      case FRIDAY:
         return foodTypeOptions.filter(
           (opt) => opt.value !== "breakfast" && opt.value !== "lunch"
         );
 
-      case "saturday":
-      case "sunday":
+      case SATURDAY:
+      case SUNDAY:
         return foodTypeOptions;
 
-      case "monday":
+      case MONDAY:
         return foodTypeOptions.filter((opt) => opt.value !== "dinner");
 
       case "none":
@@ -329,232 +285,197 @@ const FeedingLog = () => {
   }, [fetchCampData]);
 
   return (
-    <Box
-      component="section"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "600px",
-        height: "fit-content",
-        backgroundColor: "#ffffff",
-        borderRadius: "8px",
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-        overflow: "hidden",
-        boxSizing: "border-box",
-      }}
-    >
+    <FormLayout>
       {loadingCampists ? (
+        <Loader loaderMessage="Cargando campistas..." />
+      ) : (
         <Box
+          component="form"
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
             width: "100%",
-            minHeight: "300px",
+            height: "100%",
+            padding: "20px 24px",
+            gap: "12px",
           }}
+          onSubmit={onSubmitFeedingLog}
         >
-          <CircularProgress color="primary" />
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            Cargando campistas...
-          </Typography>
-        </Box>
-      ) : (
-        <>
-          <Image src={AvivadosBgImage} alt="Avivados Fondo" loading="lazy" />
           <Box
-            component="form"
+            component="article"
             sx={{
               display: "flex",
-              flexDirection: "column",
               width: "100%",
-              height: "100%",
-              padding: "20px 24px",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              gap: "8px",
+            }}
+          >
+            <Typography variant="h4" fontWeight="bold">
+              Registro de Alimentación
+            </Typography>
+            <Typography variant="body2" fontStyle="italic">
+              A través de este formulario podrás realizar el registro de
+              alimentación de cada campista.
+            </Typography>
+          </Box>
+          <Box
+            component="article"
+            sx={{
+              display: "flex",
+              width: "100%",
+              flexDirection: "column",
+              flexWrap: "wrap",
               gap: "12px",
             }}
-            onSubmit={onSubmitFeedingLog}
           >
-            {/* ...existing code... */}
-            <Box
-              component="article"
-              sx={{
-                display: "flex",
-                width: "100%",
-                flexDirection: "column",
-                flexWrap: "wrap",
-                gap: "8px",
-              }}
-            >
-              <Typography variant="h4" fontWeight="bold">
-                Registro de Alimentación
-              </Typography>
-              <Typography variant="body2" fontStyle="italic">
-                A través de este formulario podrás realizar el registro de
-                alimentación de cada campista.
-              </Typography>
-            </Box>
-            {/* ...existing code... */}
-            <Box
-              component="article"
-              sx={{
-                display: "flex",
-                width: "100%",
-                flexDirection: "column",
-                flexWrap: "wrap",
-                gap: "12px",
-              }}
-            >
-              <FormControl fullWidth required>
-                <FormLabel id="id_registered_by">
-                  Nombre de quien registra
-                </FormLabel>
-                <TextField
-                  required
-                  fullWidth
-                  name="registeredBy"
-                  placeholder="Luis Álvarez"
-                  aria-labelledby="id_registered_by"
-                  value={feedingValues.registeredBy}
-                  onChange={handleFeedingValuesChange}
-                  error={errors.registeredBy}
-                ></TextField>
-                {errors.registeredBy && (
-                  <FormHelperText error>
-                    Este campo es obligatorio.
-                  </FormHelperText>
-                )}
-              </FormControl>
-              <FormControl fullWidth required error={errors.foodDay}>
-                <FormLabel id="id_food_day_label">
-                  Día de alimentación
-                </FormLabel>
-                <Select
-                  labelId="id_food_day_label"
-                  aria-labelledby="id_food_day_label"
-                  id="id_food_day"
-                  name="foodDay"
-                  value={feedingValues.foodDay}
-                  defaultValue="none"
-                  onChange={handleFeedingValuesChange}
-                  error={errors.foodDay}
-                >
-                  {filteredFoodDayOptions.map((option) => (
-                    <MenuItem
-                      key={option.value}
-                      value={option.value}
-                      disabled={option.value == "none"}
-                    >
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.foodDay && (
-                  <FormHelperText error>
-                    Por favor, selecciona una opción.
-                  </FormHelperText>
-                )}
-              </FormControl>
-              <FormControl fullWidth required error={errors.foodType}>
-                <FormLabel id="id_food_type_label">Tipo de comida</FormLabel>
-                <Select
-                  labelId="id_food_type_label"
-                  id="id_food_type"
-                  name="foodType"
-                  value={feedingValues.foodType}
-                  defaultValue="none"
-                  onChange={handleFeedingValuesChange}
-                  error={errors.foodType}
-                >
-                  {filteredFoodTypeOptions.map((option) => (
-                    <MenuItem
-                      key={option.value}
-                      value={option.value}
-                      disabled={option.value === "none"}
-                    >
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.foodType && (
-                  <FormHelperText error>
-                    Por favor, selecciona una opción.
-                  </FormHelperText>
-                )}
-              </FormControl>
-            </Box>
-            <Divider sx={{ margin: "8px 0px" }} />
-            <Box
-              component="article"
-              sx={{
-                display: "flex",
-                width: "100%",
-                flexDirection: "column",
-                flexWrap: "wrap",
-                gap: "12px",
-              }}
-            >
-              <Typography
-                variant="body2"
-                fontStyle="italic"
-                sx={{ width: "100%" }}
-              >
-                Busca por el nombre del campista o escanea su código QR.
-              </Typography>
-              <QrScanButton
-                buttonProps={{
-                  type: "button",
-                  variant: "contained",
-                  color: "secondary",
-                  sx: { fontWeight: "bold" },
-                }}
-                onScanSuccess={onScanningCampist}
-              >
-                Escanear QR
-              </QrScanButton>
-              <FormControl fullWidth required>
-                <FormLabel id="id_campist_label">Campista</FormLabel>
-                <Autocomplete
-                  id="id_campist"
-                  aria-labelledby="id_campist_label"
-                  value={selectedCampist}
-                  onChange={onCampistChange}
-                  inputValue={searchCampist}
-                  onInputChange={(_, newInputValue) =>
-                    setSearchCampist(newInputValue)
-                  }
-                  fullWidth
-                  autoComplete
-                  autoHighlight
-                  clearOnEscape
-                  options={campists}
-                  getOptionKey={(option) => option.sysId}
-                  getOptionLabel={(option) => option.fullName}
-                  renderInput={(params) => (
-                    <TextField fullWidth {...params} placeholder="Juan Gómez" />
-                  )}
-                  renderOption={customAutocompleteOption}
-                />
-              </FormControl>
-              {selectedCampist?.sysId !== "" && (
-                <CampistDetails campist={selectedCampist} />
+            <FormControl fullWidth required>
+              <FormLabel id="id_registered_by">
+                Nombre de quien registra
+              </FormLabel>
+              <TextField
+                required
+                fullWidth
+                name="registeredBy"
+                placeholder="Luis Álvarez"
+                aria-labelledby="id_registered_by"
+                value={feedingValues.registeredBy}
+                onChange={handleFeedingValuesChange}
+                error={errors.registeredBy}
+              ></TextField>
+              {errors.registeredBy && (
+                <FormHelperText error>
+                  Este campo es obligatorio.
+                </FormHelperText>
               )}
-            </Box>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<HowToRegIcon />}
-              disabled={selectedCampist.sysId === ""}
-              loading={savingRecord}
-              loadingPosition="center"
-              onClick={onSubmitFeedingLog}
-            >
-              REGISTRAR ALIMENTACIÓN
-            </Button>
+            </FormControl>
+            <FormControl fullWidth required error={errors.foodDay}>
+              <FormLabel id="id_food_day_label">Día de alimentación</FormLabel>
+              <Select
+                labelId="id_food_day_label"
+                aria-labelledby="id_food_day_label"
+                id="id_food_day"
+                name="foodDay"
+                value={feedingValues.foodDay}
+                defaultValue="none"
+                onChange={handleFeedingValuesChange}
+                error={errors.foodDay}
+              >
+                {filteredFoodDayOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.value == "none"}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.foodDay && (
+                <FormHelperText error>
+                  Por favor, selecciona una opción.
+                </FormHelperText>
+              )}
+            </FormControl>
+            <FormControl fullWidth required error={errors.foodType}>
+              <FormLabel id="id_food_type_label">Tipo de comida</FormLabel>
+              <Select
+                labelId="id_food_type_label"
+                id="id_food_type"
+                name="foodType"
+                value={feedingValues.foodType}
+                defaultValue="none"
+                onChange={handleFeedingValuesChange}
+                error={errors.foodType}
+              >
+                {filteredFoodTypeOptions.map((option) => (
+                  <MenuItem
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.value === "none"}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.foodType && (
+                <FormHelperText error>
+                  Por favor, selecciona una opción.
+                </FormHelperText>
+              )}
+            </FormControl>
           </Box>
-        </>
+          <Divider sx={{ margin: "8px 0px" }} />
+          <Box
+            component="article"
+            sx={{
+              display: "flex",
+              width: "100%",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              gap: "12px",
+            }}
+          >
+            <Typography
+              variant="body2"
+              fontStyle="italic"
+              sx={{ width: "100%" }}
+            >
+              Busca por el nombre del campista o escanea su código QR.
+            </Typography>
+            <QrScanButton
+              buttonProps={{
+                type: "button",
+                variant: "contained",
+                color: "info",
+                sx: { fontWeight: "bold" },
+              }}
+              onScanSuccess={onScanningCampist}
+            >
+              Escanear QR
+            </QrScanButton>
+            <FormControl fullWidth required>
+              <FormLabel id="id_campist_label">Campista</FormLabel>
+              <Autocomplete
+                id="id_campist"
+                aria-labelledby="id_campist_label"
+                value={selectedCampist}
+                onChange={onCampistChange}
+                inputValue={searchCampist}
+                onInputChange={(_, newInputValue) =>
+                  setSearchCampist(newInputValue)
+                }
+                fullWidth
+                autoComplete
+                autoHighlight
+                clearOnEscape
+                options={campists}
+                getOptionKey={(option) => option.sysId}
+                getOptionLabel={(option) => option.fullName}
+                renderInput={(params) => (
+                  <TextField fullWidth {...params} placeholder="Juan Gómez" />
+                )}
+                renderOption={customAutocompleteOption}
+              />
+            </FormControl>
+            {selectedCampist?.sysId !== "" && (
+              <CampistDetails campist={selectedCampist} />
+            )}
+          </Box>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<HowToRegIcon />}
+            disabled={selectedCampist.sysId === ""}
+            loading={savingRecord}
+            loadingPosition="center"
+            onClick={onSubmitFeedingLog}
+          >
+            REGISTRAR ALIMENTACIÓN
+          </Button>
+        </Box>
       )}
-    </Box>
+    </FormLayout>
   );
 };
 

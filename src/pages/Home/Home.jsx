@@ -7,7 +7,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/camp/avivados2024/feeding-log");
+    navigate("/camp/emunah-2025/feeding-log");
   }, [navigate]);
 
   return <Box>HOME</Box>;
