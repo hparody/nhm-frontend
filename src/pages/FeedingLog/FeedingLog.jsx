@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
 import HowToRegIcon from "@mui/icons-material/HowToReg";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 import { getCampData } from "@/services/sheetsApi";
 import { createFeedingRecord } from "@/services/appScriptsApi";
@@ -311,7 +312,12 @@ const FeedingLog = () => {
               gap: "8px",
             }}
           >
-            <Typography variant="h4" fontWeight="bold">
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <RestaurantIcon fontSize="large" />
               Registro de Alimentación
             </Typography>
             <Typography variant="body2" fontStyle="italic">
@@ -330,15 +336,16 @@ const FeedingLog = () => {
             }}
           >
             <FormControl fullWidth required>
-              <FormLabel id="id_registered_by">
+              <FormLabel id="id_registered_by_label" htmlFor="id_registered_by">
                 Nombre de quien registra
               </FormLabel>
               <TextField
+                id="id_registered_by"
                 required
                 fullWidth
                 name="registeredBy"
                 placeholder="Luis Álvarez"
-                aria-labelledby="id_registered_by"
+                aria-labelledby="id_registered_by_label"
                 value={feedingValues.registeredBy}
                 onChange={handleFeedingValuesChange}
                 error={errors.registeredBy}
@@ -350,12 +357,17 @@ const FeedingLog = () => {
               )}
             </FormControl>
             <FormControl fullWidth required error={errors.foodDay}>
-              <FormLabel id="id_food_day_label">Día de alimentación</FormLabel>
+              <FormLabel id="id_food_day_label" htmlFor="id_food_day">
+                Día de alimentación
+              </FormLabel>
               <Select
                 labelId="id_food_day_label"
                 aria-labelledby="id_food_day_label"
-                id="id_food_day"
+                id="id_food_day_select"
                 name="foodDay"
+                inputProps={{
+                  id: "id_food_day",
+                }}
                 value={feedingValues.foodDay}
                 defaultValue="none"
                 onChange={handleFeedingValuesChange}
@@ -378,11 +390,16 @@ const FeedingLog = () => {
               )}
             </FormControl>
             <FormControl fullWidth required error={errors.foodType}>
-              <FormLabel id="id_food_type_label">Tipo de comida</FormLabel>
+              <FormLabel id="id_food_type_label" htmlFor="id_food_type">
+                Tipo de comida
+              </FormLabel>
               <Select
                 labelId="id_food_type_label"
-                id="id_food_type"
+                id="id_food_type_select"
                 name="foodType"
+                inputProps={{
+                  id: "id_food_type",
+                }}
                 value={feedingValues.foodType}
                 defaultValue="none"
                 onChange={handleFeedingValuesChange}
@@ -427,7 +444,7 @@ const FeedingLog = () => {
               buttonProps={{
                 type: "button",
                 variant: "contained",
-                color: "info",
+                color: "black",
                 sx: { fontWeight: "bold" },
               }}
               onScanSuccess={onScanningCampist}
@@ -435,7 +452,9 @@ const FeedingLog = () => {
               Escanear QR
             </QrScanButton>
             <FormControl fullWidth required>
-              <FormLabel id="id_campist_label">Campista</FormLabel>
+              <FormLabel id="id_campist_label" htmlFor="id_campist">
+                Campista
+              </FormLabel>
               <Autocomplete
                 id="id_campist"
                 aria-labelledby="id_campist_label"
@@ -464,7 +483,7 @@ const FeedingLog = () => {
           </Box>
           <Button
             variant="contained"
-            color="success"
+            color="primary"
             startIcon={<HowToRegIcon />}
             disabled={selectedCampist.sysId === ""}
             loading={savingRecord}
