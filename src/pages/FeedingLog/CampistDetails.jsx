@@ -39,7 +39,7 @@ const CampistDetails = ({ campist }) => {
     <Box
       id="id_campist_section"
       component="section"
-      sx={{ display: "flex", flexDirection: "row", gap: "8px" }}
+      sx={{ display: "flex", flexDirection: "row", gap: "8px", width: "100%" }}
     >
       <CampistPhoto
         photoUrl={campist.photo}
@@ -89,13 +89,14 @@ const CampistDetails = ({ campist }) => {
             margin: "0px",
             width: "100%",
             alignItems: "center",
+            flexWrap: "wrap",
           }}
         >
           <Typography
             variant="body2"
             color="text.secondary"
             fontWeight="bold"
-            sx={{ display: "flex", alignItems: "center" }}
+            sx={{ display: "flex", alignItems: "center", marginRight: "4px" }}
           >
             <PhoneAndroidIcon fontSize="small" />
             {`Teléfono: `}
@@ -117,7 +118,6 @@ const CampistDetails = ({ campist }) => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                marginLeft: "4px",
                 color: "#ffffff",
               }}
             >

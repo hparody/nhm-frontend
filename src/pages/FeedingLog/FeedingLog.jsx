@@ -489,6 +489,7 @@ const FeedingLog = () => {
             loading={savingRecord}
             loadingPosition="center"
             onClick={onSubmitFeedingLog}
+            sx={{ fontWeight: "bold" }}
           >
             REGISTRAR ALIMENTACIÓN
           </Button>
