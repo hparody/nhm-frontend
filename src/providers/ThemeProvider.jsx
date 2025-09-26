@@ -11,10 +11,10 @@ let theme = createTheme(
   {
     palette: {
       primary: {
-        main: "#133366",
+        main: "#d63016",
       },
       secondary: {
-        main: "#57BEE6",
+        main: "#e95424",
       },
       mode: "light",
     },

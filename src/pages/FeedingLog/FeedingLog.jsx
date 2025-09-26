@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
 import HowToRegIcon from "@mui/icons-material/HowToReg";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 import { getCampData } from "@/services/sheetsApi";
 import { createFeedingRecord } from "@/services/appScriptsApi";
@@ -311,7 +312,12 @@ const FeedingLog = () => {
               gap: "8px",
             }}
           >
-            <Typography variant="h4" fontWeight="bold">
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <RestaurantIcon fontSize="large" />
               Registro de Alimentación
             </Typography>
             <Typography variant="body2" fontStyle="italic">
@@ -438,7 +444,7 @@ const FeedingLog = () => {
               buttonProps={{
                 type: "button",
                 variant: "contained",
-                color: "info",
+                color: "black",
                 sx: { fontWeight: "bold" },
               }}
               onScanSuccess={onScanningCampist}
@@ -477,7 +483,7 @@ const FeedingLog = () => {
           </Box>
           <Button
             variant="contained"
-            color="success"
+            color="primary"
             startIcon={<HowToRegIcon />}
             disabled={selectedCampist.sysId === ""}
             loading={savingRecord}

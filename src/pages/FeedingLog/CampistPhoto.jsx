@@ -23,7 +23,7 @@ const imageURLToBlob = async (imageURL) => {
   return url;
 };
 
-const CampistPhoto = ({ fullName, photoUrl, gender }) => {
+const CampistPhoto = ({ alt = "", photoUrl, gender, sx }) => {
   const [campistPhoto, setCampistPhoto] = useState(
     getDefaultIconByGender(gender)
   );
@@ -53,13 +53,13 @@ const CampistPhoto = ({ fullName, photoUrl, gender }) => {
 
   return (
     <Avatar
-      alt={fullName || ""}
+      alt={alt}
       src={campistPhoto}
       variant="rounded"
       sx={{
-        width: "100px",
+        minWidth: "100px",
         height: "auto",
-        marginRight: "8px",
+        ...sx,
       }}
       slotProps={{
         img: {
@@ -76,9 +76,10 @@ const CampistPhoto = ({ fullName, photoUrl, gender }) => {
 };
 
 CampistPhoto.propTypes = {
-  fullName: PropTypes.string.isRequired,
+  alt: PropTypes.string,
   photoUrl: PropTypes.string.isRequired,
   gender: PropTypes.string.isRequired,
+  sx: PropTypes.object,
 };
 
 export default CampistPhoto;
