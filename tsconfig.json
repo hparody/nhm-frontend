@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "target": "es2020",
+    "jsx": "react-jsx",
+
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "checkJs": true,
+    "allowJs": true,
+    "lib": ["ES2015", "DOM", "WebWorker"],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/__tests__/*", "dist"]
+}
