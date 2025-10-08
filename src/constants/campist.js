@@ -13,6 +13,7 @@ const DEFAULT_CAMPIST = {
   age: "",
   fullName: "",
   photo: "",
+  _searchIndex: "",
 };
 
 export { DEFAULT_CAMPIST };

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material";
-import FuertesBackground from "@/assets/fuertes-bg.png";
+import FuertesBackground from "@/assets/fuertes-bg.jpg";
 
 const Image = styled("img")`
   object-fit: cover;

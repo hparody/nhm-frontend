@@ -13,7 +13,7 @@ import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import GppMaybeIcon from "@mui/icons-material/GppMaybe";
 
-import CampistPhoto from "./CampistPhoto";
+import CampistPhoto from "@/components/fields/CampistPhoto";
 
 const getIconByCampistType = (campistType) => {
   const campistIcons = {

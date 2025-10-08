@@ -4,7 +4,8 @@ import { parseCampistsData } from "@/utils/sheets";
 
 const BASE_URL = import.meta.env.VITE_GOOGLE_SHEETS_BASE_URL;
 const CAMP_SPREADSHEET_ID = "1kHxQkHvSVPqnlr29OYJMEDAK9ODQfC4IWcqODlUDhQ8";
-const CAMP_DB_RANGE = "CampDB!A:O";
+const CAMP_DB_RANGE = "CampDB!A:Q";
+const CAMP_FEEDING_LOG_RANGE = "'Registro Alimentación'!A:F";
 
 const api = axios.create({
   baseURL: BASE_URL, // Base URL de la API
@@ -33,5 +34,25 @@ const getCampData = async () => {
   }
   return response;
 };
+
+/*
+const getFeedingRecords = async () => {
+  const response = { error: false, errorMessage: {}, data: [] };
+  try {
+    const url = `/${CAMP_SPREADSHEET_ID}/values/${CAMP_FEEDING_LOG_RANGE}`;
+    const res = await api.get(url, {
+      params: {
+        majorDimension: "ROWS",
+      },
+    });
+    response.data = res.data.values;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    response.error = true;
+    response.errorMessage = error;
+  }
+  return response;
+};
+*/
 
 export { getCampData };

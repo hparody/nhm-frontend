@@ -18,6 +18,18 @@ declare module "@mui/material/styles" {
   }
 }
 
+declare module "@mui/material/styles" {
+  interface PaletteColor {
+    lighter?: string;
+    darker?: string;
+  }
+
+  interface SimplePaletteColorOptions {
+    lighter?: string;
+    darker?: string;
+  }
+}
+
 // Augment the component's color props
 declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {

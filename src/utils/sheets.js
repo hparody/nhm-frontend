@@ -1,3 +1,5 @@
+import normalizeText from "./normalizeText";
+
 const keysMapping = {
   sys_id: "sysId",
   id: "id",
@@ -13,6 +15,9 @@ const keysMapping = {
   age: "age",
   full_name: "fullName",
   photo_id: "photo",
+  attendance_days: "attendanceDays",
+  attendance: "attendance",
+  attendance_register_date: "attendanceRegisterDate",
 };
 
 const parseCampistsData = (rawData) => {
@@ -21,13 +26,20 @@ const parseCampistsData = (rawData) => {
     .slice(1, rawData.length)
     .map((row) => {
       const campist = keys.reduce((campistObj, key, idx) => {
-        const value =
+        let value =
           key === "photo_id" ? parsePhotoUrl(row[idx] ?? "") : row[idx];
+        if (key == "attendance") {
+          value = value == "TRUE";
+        }
         campistObj[keysMapping[key]] = value ?? "";
         return campistObj;
       }, {});
       return campist;
     })
+    .map((c) => ({
+      ...c,
+      _searchIndex: normalizeText(`${c.fullName} ${c.id}`.toLowerCase()),
+    }))
     .filter((row) => row.id != "");
 
   return parsedData;
