@@ -461,6 +461,7 @@ const FeedingLog = () => {
                 autoComplete
                 autoHighlight
                 clearOnEscape
+                disablePortal
                 options={campists}
                 getOptionKey={(option) => option.sysId}
                 getOptionLabel={(option) => option.fullName}

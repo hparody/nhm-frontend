@@ -465,6 +465,7 @@ const FeedingLog = () => {
                   setSearchCampist(newInputValue)
                 }
                 fullWidth
+                disablePortal
                 autoComplete
                 autoHighlight
                 clearOnEscape
