@@ -56,6 +56,7 @@ const CampistAutocomplete = ({
         inputValue={searchCampist}
         onInputChange={(_, newInputValue) => setSearchCampist(newInputValue)}
         fullWidth
+        disablePortal
         autoComplete
         autoHighlight
         clearOnEscape

@@ -26,7 +26,16 @@ const FormLayout = ({ children }) => {
         boxSizing: "border-box",
       }}
     >
-      <Image src={FuertesBackground} alt="Avivados Fondo" loading="lazy" />
+      <Image
+        src={FuertesBackground}
+        alt="Avivados Fondo"
+        loading="lazy"
+        sx={(theme) => ({
+          [theme.breakpoints.down("sm")]: {
+            maxHeight: "20vh",
+          },
+        })}
+      />
       {children}
     </Box>
   );

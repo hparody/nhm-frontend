@@ -11,30 +11,47 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Camp = () => {
   const navigate = useNavigate();
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
   const options = [
     {
       id: "attendance",
       title: "Asistencia",
       description: "Registro de asistencia de campistas",
-      icon: <ChecklistRtlIcon fontSize="medium" sx={{ marginRight: "8px" }} />,
+      icon: (
+        <ChecklistRtlIcon
+          fontSize={isMobile ? "small" : "medium"}
+          sx={{ marginRight: "8px" }}
+        />
+      ),
       navigateTo: "/camp/emunah-2025/attendance",
     },
     {
       id: "feeding-log",
       title: "Alimentación [API]",
       description: "Registro de alimentación de campistas [API DB]",
-      icon: <RestaurantIcon fontSize="medium" sx={{ marginRight: "8px" }} />,
+      icon: (
+        <RestaurantIcon
+          fontSize={isMobile ? "small" : "medium"}
+          sx={{ marginRight: "8px" }}
+        />
+      ),
       navigateTo: "/camp/emunah-2025/feeding-log",
     },
     {
       id: "feeding-log-sheets",
       title: "Alimentación [Sheets]",
       description: "Registro de alimentación de campistas [SHEETS]",
-      icon: <RestaurantIcon fontSize="medium" sx={{ marginRight: "8px" }} />,
+      icon: (
+        <RestaurantIcon
+          fontSize={isMobile ? "small" : "medium"}
+          sx={{ marginRight: "8px" }}
+        />
+      ),
       navigateTo: "/camp/emunah-2025/feeding-log-sheets",
     },
   ];
@@ -51,19 +68,27 @@ const Camp = () => {
             >
               {
                 <Card
-                  sx={{ width: "100%" }}
+                  sx={{ width: "100%", height: "100%", overflow: "hidden" }}
                   onClick={() => navigate(option.id)}
                 >
                   <CardActionArea>
-                    <CardContent>
+                    <CardContent sx={{ overflow: "hidden" }}>
                       <Typography
                         gutterBottom
                         variant="h5"
-                        component="div"
+                        component="span"
                         fontWeight="bold"
-                        display="flex"
-                        alignItems="center"
                         color="primary"
+                        sx={(theme) => ({
+                          display: "inline-flex",
+                          alignItems: "center",
+                          flexWrap: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          [theme.breakpoints.down("sm")]: {
+                            fontSize: "1rem",
+                          },
+                        })}
                       >
                         {option.icon}
                         {option.title}

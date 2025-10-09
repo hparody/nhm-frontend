@@ -23,6 +23,7 @@ const CampistListRow = ({ campist, checked = false, onToggle }) => {
       key={campist.sysId}
       secondaryAction={
         <Checkbox
+          id={`id-checkbox-${campist.sysId}`}
           onChange={onToggle}
           checked={checked}
           edge="end"
