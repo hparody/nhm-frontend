@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material";
-import FuertesBackground from "@/assets/fuertes-bg.png";
+import FuertesBackground from "@/assets/fuertes-bg.jpg";
 
 const Image = styled("img")`
   object-fit: cover;
@@ -26,7 +26,16 @@ const FormLayout = ({ children }) => {
         boxSizing: "border-box",
       }}
     >
-      <Image src={FuertesBackground} alt="Avivados Fondo" loading="lazy" />
+      <Image
+        src={FuertesBackground}
+        alt="Avivados Fondo"
+        loading="lazy"
+        sx={(theme) => ({
+          [theme.breakpoints.down("sm")]: {
+            maxHeight: "20vh",
+          },
+        })}
+      />
       {children}
     </Box>
   );

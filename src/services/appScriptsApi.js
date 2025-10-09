@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_GOOGLE_APP_SCRIPTS_URL;
 const IMPLEMENTATION_ID =
-  "AKfycbzCU1jRJJVok-mhbxGFtiPjrVBVpd2E1CyoGq3Ucbk-TJOFJgyCBe_Tx2cSaduvYdDf7A";
+  "AKfycbzp1_47gox-9Mpw2YE5wCxGznc111CzslKXwSZk2z1x2RsMKHS4JT7WT2Zuub2sOsfADA";
 
 const api = axios.create({
   baseURL: BASE_URL, // Base URL de la API
@@ -25,7 +25,7 @@ const createFeedingRecord = async (record) => {
         foodType,
         registeredBy,
       },
-      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
     });
     if (res.data.status == "error") {
       response.error = true;

@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "target": "es2020",
+    "jsx": "react-jsx",
+
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "declaration": false,
+
+    "resolveJsonModule": true,
+    "checkJs": true,
+    "allowJs": true,
+    "lib": ["ESNext", "DOM"],
+    "types": ["vite/client"],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    // Other Outputs
+    "sourceMap": true
+  },
+  "include": ["src", "src/vite-env.d.ts"],
+  "exclude": ["node_modules", "**/__tests__/*", "dist"]
+}

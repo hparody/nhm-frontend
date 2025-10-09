@@ -3,12 +3,22 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 const CustomGlobalStyles = () => (
   <GlobalStyles
     styles={(theme) => ({
-      html: { WebkitFontSmoothing: "auto" },
+      html: {
+        WebkitFontSmoothing: "auto",
+        "min-height": "100dvh",
+        overscrollBehaviorY: "contain",
+      },
       body: {
         height: "100vh",
+        "min-height": "100dvh",
         width: "100vw",
         overflow: "hidden auto",
+        overscrollBehaviorY: "contain",
         backgroundColor: "#f1f1f1",
+      },
+      "#root": {
+        "min-height": "100dvh",
+        overscrollBehaviorY: "contain",
       },
       ".MuiFormLabel-asterisk": { color: "red" },
       ".MuiInputBase-input.MuiOutlinedInput-input": {

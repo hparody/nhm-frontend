@@ -4,7 +4,8 @@ import { parseCampistsData } from "@/utils/sheets";
 
 const BASE_URL = import.meta.env.VITE_GOOGLE_SHEETS_BASE_URL;
 const CAMP_SPREADSHEET_ID = "1kHxQkHvSVPqnlr29OYJMEDAK9ODQfC4IWcqODlUDhQ8";
-const CAMP_DB_RANGE = "CampDB!A:O";
+const CAMP_DB_RANGE = "CampDB!A:Q";
+const CAMP_FEEDING_LOG_RANGE = "'Registro Alimentación'!A:F";
 
 const api = axios.create({
   baseURL: BASE_URL, // Base URL de la API

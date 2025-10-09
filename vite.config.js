@@ -24,10 +24,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": {
+      "/sheets-api": {
         target: "https://sheets.googleapis.com/v4/spreadsheets", // Base URL for Google Sheets API to get the campists
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/sheets-api/, ""),
       },
       "/drive-api": {
         target: "https://www.googleapis.com/drive", // Base URL for Google Drive API to retrieve campist images
@@ -38,6 +38,11 @@ export default defineConfig({
         target: "https://script.google.com", // Base URL for Google Script API to send records to the sheets
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/app-scripts-api/, ""),
+      },
+      "/api-data": {
+        target: "https://api-backend-ooz2.onrender.com/api",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-data/, ""),
       },
     },
   },
