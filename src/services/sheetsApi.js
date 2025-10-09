@@ -35,24 +35,4 @@ const getCampData = async () => {
   return response;
 };
 
-/*
-const getFeedingRecords = async () => {
-  const response = { error: false, errorMessage: {}, data: [] };
-  try {
-    const url = `/${CAMP_SPREADSHEET_ID}/values/${CAMP_FEEDING_LOG_RANGE}`;
-    const res = await api.get(url, {
-      params: {
-        majorDimension: "ROWS",
-      },
-    });
-    response.data = res.data.values;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    response.error = true;
-    response.errorMessage = error;
-  }
-  return response;
-};
-*/
-
 export { getCampData };

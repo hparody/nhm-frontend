@@ -1,16 +1,17 @@
 import { useState, useCallback, useEffect } from "react";
 
-import { getCampData } from "@/services/sheetsApi";
+import { CampistNewApi } from "@/types";
+import { getCampists } from "@/services/campists";
 
 const useCampists = () => {
   const [error, setError] = useState(null);
   const [loadingCampists, setLoadingCampists] = useState(true);
-  const [campists, setCampists] = useState([]);
+  const [campists, setCampists] = useState<CampistNewApi[]>([]);
 
   const fetchCampData = useCallback(async () => {
     setError(null);
     setLoadingCampists(true);
-    const res = await getCampData();
+    const res = await getCampists();
     if (!res.error) {
       setCampists(res.data);
     } else {

@@ -10,12 +10,13 @@ export type Campist = {
   gender: "Mujer" | "Hombre";
   bloodType: string;
   allergies: string;
-  age: string;
+  age: string | number;
   fullName: string;
   photo: string;
-  attendance: boolean;
+  attendance?: boolean;
   attendanceDays?: string;
   attendanceRegisterDate?: string;
+  idIssueDate?: string;
   _searchIndex: string;
 };
 
@@ -38,3 +39,16 @@ export type CampistRaw = {
   attendance: string;
   attendance_register_date: string;
 };
+
+export type CampistRawNewApi = {
+  id: string;
+  nombreCompleto: string;
+  telefono: string;
+  cedula: string;
+  fechaNacimiento: string;
+  fechaExpedicionCedula: string;
+  fotoUrl: string;
+  edad: string | number;
+};
+
+export type CampistNewApi = Partial<Campist> & { photoUrl: string };

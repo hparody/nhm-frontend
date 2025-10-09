@@ -5,11 +5,19 @@ import Avatar from "@mui/material/Avatar";
 
 import DefaultManPhoto from "@/assets/man-icon.png";
 import DefaultWomanPhoto from "@/assets/woman-icon.png";
+import DefaultUserPhoto from "@/assets/user-icon.png";
 
 const imagesBlobCache = new Map();
 
-const getDefaultIconByGender = (gender) =>
-  gender === "Hombre" ? DefaultManPhoto : DefaultWomanPhoto;
+const getDefaultIconByGender = (gender) => {
+  let icon = DefaultUserPhoto;
+  if (gender == "Hombre") {
+    icon = DefaultManPhoto;
+  } else if (gender == "Mujer") {
+    icon = DefaultWomanPhoto;
+  }
+  return icon;
+};
 
 const imageURLToBlob = async (imageURL) => {
   let url = "";
@@ -40,7 +48,7 @@ const CampistPhoto = ({ alt = "", photoUrl, gender, sx, imageSx }) => {
   );
 
   useEffect(() => {
-    if (photoUrl !== "") {
+    if (photoUrl && photoUrl !== "") {
       if (imagesBlobCache.has(photoUrl)) {
         setCampistPhoto(imagesBlobCache.get(photoUrl));
       } else {
@@ -78,8 +86,8 @@ const CampistPhoto = ({ alt = "", photoUrl, gender, sx, imageSx }) => {
 
 CampistPhoto.propTypes = {
   alt: PropTypes.string,
-  photoUrl: PropTypes.string.isRequired,
-  gender: PropTypes.string.isRequired,
+  photoUrl: PropTypes.string,
+  gender: PropTypes.string,
   sx: PropTypes.object,
   imageSx: PropTypes.object,
 };

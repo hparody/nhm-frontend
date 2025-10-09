@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_GOOGLE_SHEETS_BASE_URL: string;
   readonly VITE_GOOGLE_DRIVE_URL: string;
   readonly VITE_GOOGLE_APP_SCRIPTS_URL: string;
+  readonly VITE_API_DATA_ENDPOINT: string;
 }
 
 interface ImportMeta {

@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import { Campist, CampistNewApi } from "@/types";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -34,7 +34,7 @@ const getChipColorByCampistType = (campistType) => {
   return campistIcons[campistType] || "default";
 };
 
-const CampistDetails = ({ campist }) => {
+const CampistDetails = ({ campist }: { campist: Campist | CampistNewApi }) => {
   return (
     <Box
       id="id_campist_section"
@@ -52,22 +52,25 @@ const CampistDetails = ({ campist }) => {
           display: "flex",
           flexDirection: "row",
           flexWrap: "wrap",
+          alignContent: "flex-start",
           gap: "4px",
         }}
       >
-        <Chip
-          sx={{
-            padding: "8px 12px",
-            fontWeight: "bold",
-            fontSize: "0.8rem",
-            cursor: "default",
-          }}
-          icon={getIconByCampistType(campist.campistType)}
-          label={campist.campistType}
-          color={getChipColorByCampistType(campist.campistType)}
-          size="small"
-          variant="outlined"
-        />
+        {campist.campistType && (
+          <Chip
+            sx={{
+              padding: "8px 12px",
+              fontWeight: "bold",
+              fontSize: "0.8rem",
+              cursor: "default",
+            }}
+            icon={getIconByCampistType(campist.campistType)}
+            label={campist.campistType}
+            color={getChipColorByCampistType(campist.campistType)}
+            size="small"
+            variant="outlined"
+          />
+        )}
         <Typography
           variant="h6"
           color="text.main"
@@ -147,45 +150,28 @@ const CampistDetails = ({ campist }) => {
             </Link>
           )}
         </Box>
-
-        <Typography
-          variant="body2"
-          fontWeight="bold"
-          sx={{ display: "flex", margin: "0px" }}
-          color="text.secondary"
-        >
-          <GppMaybeIcon fontSize="small" />
-          {`Alergias: `}
+        {campist.allergies && (
           <Typography
-            variant="caption"
-            fontWeight="normal"
+            variant="body2"
+            fontWeight="bold"
+            sx={{ display: "flex", margin: "0px" }}
             color="text.secondary"
-            sx={{ marginLeft: "4px" }}
           >
-            {campist.allergies}
+            <GppMaybeIcon fontSize="small" />
+            {`Alergias: `}
+            <Typography
+              variant="caption"
+              fontWeight="normal"
+              color="text.secondary"
+              sx={{ marginLeft: "4px" }}
+            >
+              {campist.allergies ?? ""}
+            </Typography>
           </Typography>
-        </Typography>
+        )}
       </Box>
     </Box>
   );
-};
-
-CampistDetails.propTypes = {
-  campist: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    lastName: PropTypes.string,
-    idType: PropTypes.string,
-    campistType: PropTypes.string,
-    cellphone: PropTypes.string,
-    birthdate: PropTypes.string,
-    gender: PropTypes.string,
-    bloodType: PropTypes.string,
-    allergies: PropTypes.string,
-    age: PropTypes.string,
-    fullName: PropTypes.string,
-    photo: PropTypes.string,
-  }).isRequired,
 };
 
 export default CampistDetails;

@@ -206,7 +206,7 @@ const FeedingLog = () => {
         setSelectedCampist(DEFAULT_CAMPIST);
       } else {
         console.error("Error creating feeding record:", res.errorMessage);
-        const errorMessage = `Error: ${res.errorMessage}`;
+        const errorMessage = `Error: ${JSON.stringify(res.errorMessage)}`;
         notifications.show(errorMessage, {
           key: "feeding-log",
           severity: "error",
@@ -318,7 +318,7 @@ const FeedingLog = () => {
               sx={{ display: "flex", alignItems: "center", gap: "8px" }}
             >
               <RestaurantIcon fontSize="large" />
-              Registro de Alimentación
+              Registro de Alimentación [Sheets]
             </Typography>
             <Typography variant="body2" fontStyle="italic">
               A través de este formulario podrás realizar el registro de

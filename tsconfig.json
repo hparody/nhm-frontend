@@ -9,19 +9,22 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "declaration": false,
+
     "resolveJsonModule": true,
     "checkJs": true,
     "allowJs": true,
-    "lib": ["ES2015", "DOM", "WebWorker"],
+    "lib": ["ESNext", "DOM"],
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/*"]
     },
 
     // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true
+    "sourceMap": true
   },
-  "include": ["src"],
+  "include": ["src", "src/vite-env.d.ts"],
   "exclude": ["node_modules", "**/__tests__/*", "dist"]
 }

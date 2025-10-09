@@ -25,10 +25,17 @@ const Camp = () => {
     },
     {
       id: "feeding-log",
-      title: "Alimentación",
-      description: "Registro de alimentación de campistas",
+      title: "Alimentación [API]",
+      description: "Registro de alimentación de campistas [API DB]",
       icon: <RestaurantIcon fontSize="medium" sx={{ marginRight: "8px" }} />,
       navigateTo: "/camp/emunah-2025/feeding-log",
+    },
+    {
+      id: "feeding-log-sheets",
+      title: "Alimentación [Sheets]",
+      description: "Registro de alimentación de campistas [SHEETS]",
+      icon: <RestaurantIcon fontSize="medium" sx={{ marginRight: "8px" }} />,
+      navigateTo: "/camp/emunah-2025/feeding-log-sheets",
     },
   ];
 

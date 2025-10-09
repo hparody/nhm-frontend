@@ -45,15 +45,20 @@ const CampistListRow = ({ campist, checked = false, onToggle }) => {
           id={labelId}
           primary={campist.fullName}
           secondary={
-            <Typography variant="body2">
-              {`Días de asistencia: `}
-              <Typography variant="body2" fontStyle="italic" component="span">
-                {campist.attendanceDays}
+            campist.attendanceDays && (
+              <Typography variant="body2">
+                {`Días de asistencia: `}
+                <Typography variant="body2" fontStyle="italic" component="span">
+                  {campist.attendanceDays}
+                </Typography>
               </Typography>
-            </Typography>
+            )
           }
           slotProps={{
-            primary: { fontWeight: "600", color: "black.light" },
+            primary: {
+              fontWeight: "600",
+              color: `${checked ? "black" : "black.light"}`,
+            },
             secondary: { color: "gray.dark" },
           }}
         />
