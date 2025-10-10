@@ -89,6 +89,7 @@ const CampistDetails = ({ campist }: { campist: Campist | CampistNewApi }) => {
           component="div"
           sx={{
             display: "flex",
+            gap: "4px",
             margin: "0px",
             width: "100%",
             alignItems: "center",
@@ -140,8 +141,6 @@ const CampistDetails = ({ campist }: { campist: Campist | CampistNewApi }) => {
                   fontWeight: "bold",
                   color: "white.main",
                   backgroundColor: "#25D366",
-                  marginRight: "4px",
-                  marginLeft: "4px",
                   "&:hover": {
                     backgroundColor: "#08742f",
                   },
