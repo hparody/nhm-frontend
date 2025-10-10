@@ -1,9 +1,15 @@
-import { CampistRawNewApi, CampistNewApi } from "@/types";
+import {
+  CampistRawNewApi,
+  CampistNewApi,
+  FeedingRecord,
+  FeedingObj,
+  FeedingRecordApi,
+} from "@/types";
 
 import normalizeText from "./normalizeText";
 import mapObject from "./mapObject";
 
-const keysMapping = {
+const campistKeysMapping = {
   id: "sysId",
   nombreCompleto: "fullName",
   telefono: "cellphone",
@@ -14,15 +20,15 @@ const keysMapping = {
   edad: "age",
 } as const;
 
-type KeysMapping = typeof keysMapping;
+type CampistKeysMapping = typeof campistKeysMapping;
 
 const parseCampistsData = (rawData: CampistRawNewApi[]): CampistNewApi[] => {
   const parsedCampists = rawData.map((campist) => {
     const mappedCampist = mapObject<
       CampistRawNewApi,
       CampistNewApi,
-      KeysMapping
-    >(campist, keysMapping);
+      CampistKeysMapping
+    >(campist, campistKeysMapping);
 
     mappedCampist["photo"] = "";
     if (campist.fotoUrl) {
@@ -46,4 +52,37 @@ const parsePhotoUrl = (photoId) => {
   return photoId;
 };
 
-export { parseCampistsData };
+type FieldMapping<ApiType, WebType> = {
+  api: keyof Partial<ApiType>;
+  web: keyof Partial<WebType>;
+};
+
+const feedingLogMapping: FieldMapping<FeedingRecordApi, FeedingRecord>[] = [
+  { api: "id", web: "id" },
+  { api: "campistaId", web: "campistSysId" },
+  { api: "tipoComida", web: "foodType" },
+  { api: "diaComida", web: "day" },
+  { api: "registradoPor", web: "registeredBy" },
+  { api: "fechaRegistro", web: "registerDate" },
+];
+
+const parseFeedingRecordToApi = (feedingRecord: FeedingObj) => {
+  return parseToApi<FeedingRecordApi, FeedingRecord>(
+    feedingRecord,
+    feedingLogMapping
+  );
+};
+
+const parseToApi = <ApiType, WebType>(
+  object: Partial<WebType>,
+  mappingArray: FieldMapping<ApiType, WebType>[]
+) => {
+  const result = {};
+  for (const key in object) {
+    const targetKey = mappingArray.find((r) => r.web == key)?.api;
+    (result as any)[targetKey] = object[key] ?? "";
+  }
+  return result;
+};
+
+export { parseCampistsData, parseFeedingRecordToApi };

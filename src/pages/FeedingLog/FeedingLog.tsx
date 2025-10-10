@@ -20,7 +20,7 @@ import Select from "@mui/material/Select";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 
-import { createFeedingRecord } from "@/services/appScriptsApi";
+import { registerFeedingLog } from "@/services/feeding";
 
 import { getOptionLabel } from "@/utils/array";
 import getSuggestedDay from "@/utils/getSuggestedDay";
@@ -42,6 +42,7 @@ import Loader from "@/components/Loader";
 import useCampists from "@/hooks/useCampists";
 
 import CampistDetails from "./CampistDetails";
+import { FeedingObj } from "@/types";
 
 const DEFAULT_ERRORS = {
   registeredBy: false,
@@ -202,52 +203,36 @@ const FeedingLog = () => {
     });
   }, [selectedCampist, feedingValues]);
 
-  const saveFeedingRecord = useCallback(
-    async ({ campistId, campistName, day, foodType, registeredBy }) => {
-      const feedingRecord = {
-        datetime: new Date().toLocaleString(),
-        sysId: campistId,
-        name: campistName,
-        day,
-        foodType,
-        registeredBy,
-      };
-
-      const res = await createFeedingRecord(feedingRecord);
-      if (!res.error) {
-        const successMessage = `Alimentación (${getOptionLabel(day, foodDayOptions)} - ${getOptionLabel(foodType, foodTypeOptions)}) para ${campistName} registrada exitosamente.`;
-        notifications.show(successMessage, {
-          key: "feeding-log",
-          severity: "success",
-          autoHideDuration: 3000,
-        });
-        setSelectedCampist(DEFAULT_CAMPIST_NEW_API);
-      } else {
-        console.error("Error creating feeding record:", res.errorMessage);
-        const errorMessage = `Error: ${JSON.stringify(res.errorMessage)}`;
-        notifications.show(errorMessage, {
-          key: "feeding-log",
-          severity: "error",
-          autoHideDuration: 3000,
-        });
-      }
-    },
-    [notifications]
-  );
-
   const onSubmitFeedingLog = useCallback(
     async (event) => {
       event.preventDefault();
       setSavingRecord(true);
-
       if (isFormValid()) {
-        await saveFeedingRecord({
-          campistId: selectedCampist.sysId,
-          campistName: selectedCampist.fullName,
+        const feedingRecord: FeedingObj = {
+          campistSysId: selectedCampist.sysId,
           day: feedingValues.foodDay,
           foodType: feedingValues.foodType,
           registeredBy: feedingValues.registeredBy,
-        });
+        };
+        const res = await registerFeedingLog(feedingRecord);
+
+        if (!res.error) {
+          const successMessage = `Alimentación (${getOptionLabel(feedingValues.foodDay, foodDayOptions)} - ${getOptionLabel(feedingValues.foodType, foodTypeOptions)}) para ${selectedCampist.fullName} registrada exitosamente.`;
+          notifications.show(successMessage, {
+            key: "feeding-log",
+            severity: "success",
+            autoHideDuration: 3000,
+          });
+          setSelectedCampist(DEFAULT_CAMPIST_NEW_API);
+        } else {
+          console.error("Error creating feeding record:", res.errorMessage);
+          const errorMessage = `Error: ${JSON.stringify(res.errorMessage)}`;
+          notifications.show(errorMessage, {
+            key: "feeding-log",
+            severity: "error",
+            autoHideDuration: 3000,
+          });
+        }
       } else {
         notifications.show("Todos los campos son obligatorios.", {
           key: "form-errors",
@@ -261,7 +246,6 @@ const FeedingLog = () => {
     [
       setSavingRecord,
       isFormValid,
-      saveFeedingRecord,
       selectedCampist,
       feedingValues,
       notifications,
