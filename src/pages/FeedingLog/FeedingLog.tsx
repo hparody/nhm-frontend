@@ -1,8 +1,9 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 
 import { useNotifications } from "@toolpad/core";
 
 import Box from "@mui/material/Box";
+import Popper from "@mui/material/Popper";
 import { Button, FormHelperText } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
@@ -49,6 +50,26 @@ const DEFAULT_ERRORS = {
   campist: false,
 };
 
+const CustomPopper = (props) => {
+  return (
+    <Popper
+      {...props}
+      disablePortal
+      placement="top-start"
+      modifiers={[
+        { name: "preventOverflow", options: { boundary: "viewport" } },
+      ]}
+      sx={{
+        maxHeight: "40vh", // limit height
+        overflowY: "auto",
+        WebkitOverflowScrolling: "touch", // ✅ smooth scroll for iOS
+        touchAction: "pan-y", // ✅ enable finger scrolling
+        overscrollBehavior: "contain", // ✅ prevent "bounce" propagation
+      }}
+    />
+  );
+};
+
 const customAutocompleteOption = (props, option) => {
   const { key, ...optionProps } = props;
   return (
@@ -82,7 +103,7 @@ const foodTypeOptions = [
 
 const FeedingLog = () => {
   const notifications = useNotifications();
-
+  const autocompleteRef = useRef(null);
   const { campists, loadingCampists, error } = useCampists();
 
   if (error) {
@@ -459,15 +480,30 @@ const FeedingLog = () => {
                 }
                 fullWidth
                 autoComplete
+                disablePortal
                 autoHighlight
                 clearOnEscape
                 options={campists}
                 getOptionKey={(option) => option.sysId}
                 getOptionLabel={(option) => option.fullName}
                 renderInput={(params) => (
-                  <TextField fullWidth {...params} placeholder="Juan Gómez" />
+                  <TextField
+                    ref={autocompleteRef}
+                    onFocus={() =>
+                      autocompleteRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      })
+                    }
+                    fullWidth
+                    {...params}
+                    placeholder="Juan Gómez"
+                  />
                 )}
                 renderOption={customAutocompleteOption}
+                slots={{
+                  popper: CustomPopper,
+                }}
               />
             </FormControl>
             {selectedCampist?.sysId !== "" && (
